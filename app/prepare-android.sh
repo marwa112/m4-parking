@@ -4,6 +4,7 @@ set -euo pipefail
 rm -rf www && mkdir www
 cp -r ../docs/. www/
 rm -f www/sw.js www/.nojekyll            # the app ships its own files; no service worker needed
+rm -rf www/deck                          # the sales deck lives on the website only
 [ -d android ] || npx cap add android
 npx cap sync android
 M=android/app/src/main/AndroidManifest.xml

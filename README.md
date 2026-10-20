@@ -11,6 +11,7 @@ and from 15:00 the day before a Sunday or public holiday. Same spot at most 14 d
 
 - **Web app:** https://marwa112.github.io/m4-parking/ — open in Chrome on Android and choose *Add to Home screen*.
 - **Android app:** download `m4-parking.apk` from the latest [release](../../releases) on the phone and open it.
+- **Sales deck:** https://marwa112.github.io/m4-parking/deck/ (source in `docs/deck/`). Arrow keys or swipe to move between slides.
 
 ## How it stays up to date
 
