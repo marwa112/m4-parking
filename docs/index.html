@@ -469,8 +469,8 @@ function drawMap(){
     const nm=D.rnames[r[0]];if(nm){const pts=r[2].map(c=>P(c[0],c[1])).filter(p=>p[0]>20&&p[0]<MW-20&&p[1]>20&&p[1]<MH-20);
       let len=0;for(let i=1;i<pts.length;i++)len+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);
       if(pts.length&&(!nameCand[nm]||len>nameCand[nm].len))nameCand[nm]={len,pts}}}
-  const placed=[];const fits=(x,y,w,h)=>{if(x<4||y<4||x+w>MW-56||y+h>MH-4)return false;for(const b of placed)if(x<b[0]+b[2]&&x+w>b[0]&&y<b[1]+b[3]&&y+h>b[1])return false;placed.push([x,y,w,h]);return true};
-  const pin=P(MV.pin[0],MV.pin[1]);placed.push([pin[0]-12,pin[1]-24,48,36]);
+  const placed=[];const fits=(x,y,w,h)=>{if(x<4||y<4||x+w>(y<150?MW-56:MW-4)||y+h>MH-4)return false;for(const b of placed)if(x<b[0]+b[2]&&x+w>b[0]&&y<b[1]+b[3]&&y+h>b[1])return false;placed.push([x,y,w,h]);return true};
+  const pin=P(MV.pin[0],MV.pin[1]);placed.push([pin[0]-12,pin[1]-24,48,36]);placed.push([4,MH-34,170,32],[4,4,44,30]);
   let oth="",othLab=[];
   for(const o of D.other){if(!box(o[1]))continue;oth+=`<path d="${path(o[1])}"/>`;if(k>=3)othLab.push({pts:o[1].map(c=>P(c[0],c[1])),key:otherTxt(D.olabels[o[0]])+" · not valid"})}
   let ok="",no="",noDash="",sel="",hl="";const hlSet=new Set(MV.hl||[]);const groups={},perSeg=[];
@@ -482,9 +482,12 @@ function drawMap(){
     const cl=cleanLabel(s,at);const item={pm,key:cl.txt,kind:cl.kind,sel:i===selIdx||hlSet.has(i),ok:st.ok,own:s[0]===si||hlSet.has(i)};
     if(k>=2.6)perSeg.push(item);else if(item.own)(groups[item.key]=groups[item.key]||[]).push(item)});
   const labels=[];
-  const tryLabel=(g,key,cls)=>{const w=key.length*7.3+16+(cls==="c"||cls==="w"?22:0),h=22;
-    for(const [ox,oy] of [[14,-11],[-w-14,-11],[14,12],[-w-14,-34],[14,-36],[-w/2,18],[-w/2,-42]]){
-      const x=g.pm[0]+ox,y=g.pm[1]+oy;if(fits(x,y,w,h)){labels.push({x,y,w,h,key,cls,ok:g.ok,sel:g.sel,ax:g.pm[0],ay:g.pm[1]});return true}}return false};
+  const icoW=cls=>cls==="c"||cls==="w"?22:0;
+  const splitKey=(key,cls)=>{const maxW=MW-120;if(key.length*7.3+16+icoW(cls)<=maxW)return[key];
+    const parts=key.split(" · ");let best=null;for(let i=1;i<parts.length;i++){const a=parts.slice(0,i).join(" · "),b=parts.slice(i).join(" · ");const m=Math.max(a.length,b.length);if(!best||m<best.m)best={m,l:[a,b]}}return best?best.l:[key]};
+  const tryLabel=(g,key,cls)=>{const lines=splitKey(key,cls);const w=Math.max(...lines.map(t=>t.length))*7.3+16+icoW(cls),h=lines.length>1?38:22;
+    for(const [ox,oy] of [[14,-h/2],[-w-14,-h/2],[14,12],[-w-14,12],[14,-h-12],[-w-14,-h-12],[-w/2,18],[-w/2,-h-18],[-w/2,44],[-w/2,-h-44],[14,40],[-w-14,-h-40]]){
+      let x=g.pm[0]+ox;const y=g.pm[1]+oy;if(ox===-w/2)x=Math.max(4,Math.min(MW-4-w,x));if(fits(x,y,w,h)){labels.push({x,y,w,h,key,lines,cls,ok:g.ok,sel:g.sel,ax:g.pm[0],ay:g.pm[1]});return true}}return false};
   if(k<2.6){Object.keys(groups).sort((a,b)=>(groups[b].some(g=>g.sel)?1:0)-(groups[a].some(g=>g.sel)?1:0)).forEach(key=>{
     const c=groups[key].slice().sort((a,b)=>(b.sel?1:0)-(a.sel?1:0));for(const g of c)if(tryLabel(g,key,g.kind))break})}
   else{perSeg.sort((a,b)=>(b.sel?2:b.own?1:0)-(a.sel?2:a.own?1:0)).forEach(g=>tryLabel(g,g.key,g.kind))}
@@ -501,7 +504,7 @@ function drawMap(){
     const tx=l.cls==="c"||l.cls==="w"?l.x+28:l.x+8;
     lab+=`<line x1="${l.ax.toFixed(1)}" y1="${l.ay.toFixed(1)}" x2="${(l.x+(l.x>l.ax?0:l.w)).toFixed(1)}" y2="${(l.y+l.h/2).toFixed(1)}" stroke="var(--ink)" stroke-width="1"/>`+
     `<rect x="${l.x.toFixed(1)}" y="${l.y.toFixed(1)}" width="${l.w.toFixed(1)}" height="${l.h}" rx="4" fill="${fill}" stroke="var(--ink)" stroke-width="${l.sel?2.5:1}"${l.cls==="o"||l.cls==="w"?' stroke-dasharray="2 2"':""}/>`+tri+triCold+
-    `<text x="${tx.toFixed(1)}" y="${(l.y+15).toFixed(1)}" text-anchor="start" class="${tcls}">${esc(l.key)}</text>`}
+    `<text x="${tx.toFixed(1)}" y="${(l.y+15).toFixed(1)}" text-anchor="start" class="${tcls}">${l.lines.map((t,i)=>`<tspan x="${tx.toFixed(1)}" dy="${i?16:0}">${esc(t)}</tspan>`).join("")}</text>`}
   const sb=k>=4?20:k>=2?50:100;
   $("map").innerHTML=`<svg viewBox="0 0 ${MW} ${MH}" role="img" aria-label="Map of ${esc(D.streets[si])} with parking sections">
   <style>.rn{font:600 11px var(--f-display);fill:var(--muted);paint-order:stroke;stroke:var(--halo);stroke-width:4px;stroke-linejoin:round}
