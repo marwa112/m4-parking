@@ -1,0 +1,52 @@
+name: Build Android app
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/index.html"
+      - "docs/icons/**"
+      - "app/**"
+      - ".github/workflows/build-apk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow==10.4.0
+      - name: Generate Android project
+        working-directory: app
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          npm ci || npm install --no-audit --no-fund
+          ./prepare-android.sh
+      - name: Build APK
+        working-directory: app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/m4-parking.apk"
+      - name: Publish as a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v1.${{ github.run_number }}" m4-parking.apk \
+            --title "M4 Parking 1.${{ github.run_number }}" \
+            --notes "Download m4-parking.apk on your Android phone and open it to install. If an older version is installed, uninstall it first (each build is signed with a new test key). Street data updates itself inside the app."

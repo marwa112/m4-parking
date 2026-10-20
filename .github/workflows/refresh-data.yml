@@ -1,0 +1,40 @@
+name: Refresh parking data
+
+on:
+  schedule:
+    - cron: "17 2 * * 1"   # every Monday 02:17 UTC
+  workflow_dispatch:
+    inputs:
+      refresh_osm:
+        description: "Also re-download OpenStreetMap addresses"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyproj==3.6.1
+      - name: Rebuild docs/data.json
+        env:
+          # OSM addresses on demand, and automatically on the first Monday of each month
+          REFRESH_OSM: ${{ inputs.refresh_osm && '1' || '0' }}
+        run: |
+          if [ "$(date -u +%d)" -le 7 ] && [ "${{ github.event_name }}" = "schedule" ]; then export REFRESH_OSM=1; fi
+          scripts/refresh.sh
+      - name: Commit if changed
+        run: |
+          git config user.name "parking-data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data.json data/osm
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Refresh parking data $(date -u +%F)"
+          git push

@@ -1,0 +1,6 @@
+{
+  "appId": "se.marwa112.m4parking",
+  "appName": "M4 Parking",
+  "webDir": "www",
+  "android": { "allowMixedContent": false }
+}

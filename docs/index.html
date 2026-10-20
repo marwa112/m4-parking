@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b5cad">
+<meta name="description" content="Checks where and when an M4 residential parking permit is valid in Göteborg.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>M4 Parking Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800;900&family=Overpass+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one column — week banner, address form, verdict, zoomable map. Blue = allowed, orange + dashes = not allowed, grey dots = parking your permit doesn't cover. */
+:root{
+  --bg:#f2f4f7; --surface:#ffffff; --ink:#0d1520; --muted:#3f4b5a; --line:#b9c3cf;
+  --sign:#0b5cad; --ok:#0b4f99; --ok-soft:#dceafa; --no:#9a4a00; --no-soft:#ffe3bd;
+  --road:#c3cad3; --road-major:#a7b0bb; --halo:#ffffff; --pin:#0d1520; --other:#5d6876;
+  --ban-bg:#b0001a; --ban-fg:#ffe14d; --stop:#c8102e;
+  --f-display:"Overpass",system-ui,sans-serif; --f-mono:"Overpass Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1117; --surface:#161e28; --ink:#f3f6fa; --muted:#b6c2d0; --line:#3a4858;
+  --sign:#3b8be0; --ok:#8cc4ff; --ok-soft:#0f2b4d; --no:#ffb44d; --no-soft:#3f2a0b;
+  --road:#344252; --road-major:#4a5a6c; --halo:#161e28; --pin:#f3f6fa; --other:#9aa7b6; --stop:#ff5c5c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1117; --surface:#161e28; --ink:#f3f6fa; --muted:#b6c2d0; --line:#3a4858;
+  --sign:#3b8be0; --ok:#8cc4ff; --ok-soft:#0f2b4d; --no:#ffb44d; --no-soft:#3f2a0b;
+  --road:#344252; --road-major:#4a5a6c; --halo:#161e28; --pin:#f3f6fa; --other:#9aa7b6; --stop:#ff5c5c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-display);font-size:16px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px}
+.wrap{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-weight:900;font-size:1.4rem;margin:0;letter-spacing:-.01em}
+.permit{font:700 .85rem var(--f-mono);border:2px solid var(--ink);border-radius:6px;padding:3px 8px}
+section{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+h2{font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+
+.week{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.wk-num{font-weight:900;font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.wk-pill{font:800 1rem var(--f-display);padding:6px 12px;border-radius:999px;border:2px solid var(--ink)}
+.wk-pill.odd{background:var(--ink);color:var(--surface)}
+.wk-next{font-size:.85rem;color:var(--muted);flex-basis:100%}
+
+form{display:grid;grid-template-columns:1fr 96px;gap:10px}
+label{display:block;font-size:.75rem;font-weight:800;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+input{font:600 1.05rem var(--f-display);background:var(--bg);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:10px;width:100%;min-width:0}
+input:focus{border-color:var(--sign);outline:none}
+.go{grid-column:1/-1;font:900 1.05rem var(--f-display);padding:13px;border-radius:10px;border:0;background:var(--sign);color:#fff;cursor:pointer}
+.when{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:.85rem;color:var(--muted)}
+.when input{font:500 .9rem var(--f-mono);padding:6px 8px;width:auto}
+.ghost{font:700 .85rem var(--f-display);background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+:focus-visible{outline:3px solid var(--sign);outline-offset:2px}
+.note{font-size:.88rem;font-weight:700;margin:10px 0 0}
+.wl{display:inline-block;margin:0;min-width:5.5em;text-transform:none;letter-spacing:0;font-size:.85rem;font-weight:800;color:var(--muted)}
+.sug{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.sg{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);cursor:pointer;padding:8px 10px;border:2px solid var(--line);border-radius:8px}
+.sg:hover,.sg[aria-pressed=true]{border-color:var(--ink)}
+.sg[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--ink)}
+.sg-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:800}
+.sg-top span:first-child{min-width:0}
+.sg-dur{font:800 .95rem var(--f-mono);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sg-bar{height:14px;background:var(--bg);border-radius:3px;margin:6px 0 4px;overflow:hidden;border:1px solid var(--line)}
+.sg-bar span{display:block;height:100%;background:var(--ok)}
+.sg-meta{font-size:.82rem;color:var(--muted)}
+.sg-cov{font-weight:800;color:var(--ink)}
+
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;padding:14px;border-radius:10px;border:2px solid var(--line)}
+.mark{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:900 1.4rem var(--f-display)}
+.step.ok{border-color:var(--ok);background:var(--ok-soft)} .step.ok .mark{background:var(--ok);color:var(--surface)}
+.step.no{border-color:var(--no);background:repeating-linear-gradient(135deg,var(--no-soft) 0 10px,transparent 10px 20px),var(--surface)}
+.step.no .mark{background:var(--no);color:var(--surface)}
+.step.info{border-style:dashed} .step.info .mark{border:2px solid var(--ink)}
+.s-title{font-weight:900;font-size:1.25rem;line-height:1.15}
+.s-big{font-weight:900;font-size:1.6rem;line-height:1.1}
+.s-sub{font-size:.92rem;margin-top:4px}
+.s-sub strong{font-weight:800}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.92rem;margin:4px 0 0}
+.kv dt{color:var(--muted);font-weight:700} .kv dd{margin:0}
+.hint{font-size:.82rem;color:var(--muted);margin:0}
+.ban{display:inline-flex;align-items:center;gap:6px;background:var(--ban-bg);color:var(--ban-fg);font:800 .85rem var(--f-mono);padding:3px 8px 3px 6px;border-radius:5px;border:1.5px solid var(--ink);margin:1px 0}
+.ban svg{flex:none}
+.legend .ban{white-space:nowrap}
+.ban.cold{background:var(--surface);color:var(--ink);border-style:dashed}
+.err{font-weight:700;color:var(--no);font-size:.9rem;margin:0}
+
+.mapbox{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--surface);touch-action:none;cursor:grab;user-select:none}
+.mapbox.drag{cursor:grabbing}
+.mapbox svg{display:block;width:100%;height:auto}
+.zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:40px;height:40px;font:900 1.3rem var(--f-display);background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:8px;cursor:pointer;line-height:1}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.82rem;margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+footer{font-size:.8rem;color:var(--muted);display:flex;flex-direction:column;gap:6px;padding:0 4px}
+footer p{margin:0;max-width:65ch}
+html{-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0} img{max-width:100%} [hidden]{display:none!important}
+.locrow{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>M4 Parking Check</h1>
+    <span class="permit" title="Valid on M4, M4n, M5 and M5n signs">Permit M4</span>
+  </header>
+
+  <section aria-label="Week number">
+    <div class="week">
+      <div class="wk-num" id="wkNum">Week –</div>
+      <div class="wk-pill" id="wkPill">–</div>
+      <div class="wk-next" id="wkNext"></div>
+    </div>
+  </section>
+
+  <section>
+    <form id="f" autocomplete="off">
+      <div><label for="street">Street</label><input id="street" list="streets" placeholder="Sveagatan" required></div>
+      <div><label for="num">Number</label><input id="num" inputmode="text" placeholder="12" required></div>
+      <button class="go" type="submit">Check</button>
+      <div class="locrow"><button class="ghost" id="gpsBtn" type="button">⌖ Use my location</button><span class="hint" id="gpsMsg"></span></div>
+      <datalist id="streets"></datalist>
+    </form>
+    <div class="when"><label for="when" class="wl">Start time</label><input type="datetime-local" id="when"><button class="ghost" id="nowBtn" type="button">Now</button></div>
+    <div class="when"><label for="until" class="wl">Until</label><input type="datetime-local" id="until"><button class="ghost" id="clearUntil" type="button">Clear</button><span class="hint">Optional: check a whole stay</span></div>
+    <p class="note" id="fuzzy" hidden></p>
+    <p class="err" id="err" hidden></p>
+  </section>
+
+  <section id="result" aria-live="polite">
+    <h2 id="resTitle">Result</h2>
+    <div class="steps" id="steps"><p class="hint">Loading street data…</p></div>
+  </section>
+
+  <section id="sugSec" hidden>
+    <h2>Longest stays nearby</h2>
+    <p class="hint" id="sugHint"></p>
+    <div class="sug" id="sug"></div>
+  </section>
+
+  <section id="mapSec" hidden>
+    <h2 id="mapTitle">Map</h2>
+    <div class="mapbox" id="mapbox">
+      <div id="map"></div>
+      <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zreset" aria-label="Back to parking place" title="Back to parking place" style="font-size:1rem">◎</button></div>
+    </div>
+    <div class="legend">
+      <span><svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="var(--ok)" stroke-width="6" stroke-linecap="round"/></svg>M parking, allowed at start time</span>
+      <span><svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="var(--stop)" stroke-width="6" stroke-linecap="round"/></svg>M parking, not allowed at start time</span>
+      <span><svg width="34" height="10" aria-hidden="true"><line x1="3" y1="5" x2="31" y2="5" stroke="var(--other)" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.1 6"/></svg>Other parking: permit not valid</span>
+      <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="var(--pin)" stroke="var(--surface)" stroke-width="2"/></svg>Parking place</span>
+      <span><svg width="34" height="14" aria-hidden="true"><line x1="5" y1="7" x2="29" y2="7" stroke="var(--ink)" stroke-width="12" stroke-linecap="round"/><line x1="5" y1="7" x2="29" y2="7" stroke="var(--surface)" stroke-width="8" stroke-linecap="round"/><line x1="5" y1="7" x2="29" y2="7" stroke="var(--ok)" stroke-width="4" stroke-linecap="round"/></svg>Suggestion you tapped</span>
+      <span><span class="ban"><svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M8 1L15 13H1Z" fill="#e00020" stroke="#ffe14d" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v4" stroke="#ffe14d" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.1" r="0.95" fill="#ffe14d"/></svg>No parking …</span> Street cleaning now or within 7 days: parking banned for everyone at these times</span>
+      <span><span class="ban cold"><svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M8 1L15 13H1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.1" r="0.95" fill="currentColor"/></svg>Cleaning …</span> Cleaning rule that doesn't apply in the next 7 days</span>
+    </div>
+    <p class="hint" style="margin-top:8px">Drag to move, pinch or scroll to zoom. Zoom in to see a label on every section, including paid parking and loading zones. The line colour shows the situation at the start time. Red labels mark cleaning that bans parking at the start time or within 7 days after it, with the date of the next ban; dashed labels are cleaning rules that don't apply that soon, for example because of odd/even weeks or the season.</p>
+  </section>
+
+  <footer>
+    <p>Your M4 permit is valid on signs marked M with taxa 4 or higher: M4, M4n, M5 and M5n. "n" signs allow parking weekdays 18:00–09:00, and from 15:00 the day before a Sunday or public holiday, until 09:00 the next weekday. Same spot at most 14 days in a row.</p>
+    <p id="dataNote">Data: Göteborgs Stad open parking data and OpenStreetMap addresses.</p>
+    <p>Not included: temporary bans (roadworks, events). Always check the signs where you park.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const DAYS_LONG=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const STEP=15*60000, DAY=86400000, PERMIT_TAXA=4, MAXD=45;
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+let D=null, whenMs=null, last=null, MV=null, CUR_AT=Date.now(), UNTIL=null;
+
+/* ---------- calendar ---------- */
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+  h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+  mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da)}
+const ymd=d=>d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+const holCache={};
+function holidays(y){
+  if(holCache[y])return holCache[y];
+  const s=new Set(),add=(m,d)=>s.add(y+"-"+m+"-"+d),addD=d=>s.add(ymd(d));
+  const e=easter(y),off=n=>new Date(y,e.getMonth(),e.getDate()+n);
+  add(1,1);add(1,6);addD(off(-2));addD(e);addD(off(1));add(5,1);addD(off(39));addD(off(49));add(6,6);
+  for(let d=20;d<=26;d++){const t=new Date(y,5,d);if(t.getDay()===6)addD(t)}
+  for(let i=0;i<7;i++){const t=new Date(y,9,31+i);if(t.getDay()===6)addD(t)}
+  add(12,25);add(12,26);return holCache[y]=s;
+}
+const isSunOrHol=d=>d.getDay()===0||holidays(d.getFullYear()).has(ymd(d));
+function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=t.getUTCDay()||7;
+  t.setUTCDate(t.getUTCDate()+4-n);const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y0)/DAY+1)/7)}
+
+/* ---------- rules engine ---------- */
+/* segment: [streetIdx, taxa, night(0/1), spaces, coords[[lat,lon]], rules[[wd,sm,sd,em,ed,fromMin,toMin,odd,even]]] */
+function nightAllowed(d){
+  if(isSunOrHol(d))return true;
+  const m=d.getHours()*60+d.getMinutes();
+  if(m<540)return true;
+  const next=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
+  return m>=(isSunOrHol(next)?900:1080);
+}
+function inSeason(d,r){const md=(d.getMonth()+1)*100+d.getDate(),s=r[1]*100+r[2],e=r[3]*100+r[4];return s<=e?(md>=s&&md<=e):(md>=s||md<=e)}
+function cleaningNow(d,r){
+  if(!inSeason(d,r))return false;
+  if(r[0]!==-1&&d.getDay()!==r[0])return false;
+  const odd=isoWeek(d)%2===1;if(odd?!r[7]:!r[8])return false;
+  const m=d.getHours()*60+d.getMinutes();
+  return r[5]<r[6]?(m>=r[5]&&m<r[6]):(m>=r[5]||m<r[6]);
+}
+function status(ms,s){
+  if(s[1]<PERMIT_TAXA)return{ok:false,why:"sign"};
+  const d=new Date(ms);
+  for(const r of s[5])if(cleaningNow(d,r))return{ok:false,why:"clean",r};
+  if(s[2]&&!nightAllowed(d))return{ok:false,why:"day"};
+  return{ok:true,why:"ok"};
+}
+function nextChange(ms,s,limit){
+  const s0=status(ms,s).ok;let t=Math.ceil((ms+1)/STEP)*STEP;const end=ms+limit;
+  for(;t<=end;t+=STEP)if(status(t,s).ok!==s0)return t;return null;
+}
+
+/* ---------- text ---------- */
+const hm=m=>pad(Math.floor(m/60))+":"+pad(m%60);
+const hShort=m=>m%60?hm(m):pad(Math.floor(m/60));
+function weeksTxt(r,short){if(r[7]&&r[8])return "every week";return r[7]?(short?"odd wks":"odd weeks"):(short?"even wks":"even weeks")}
+function seasonTxt(r){if(r[1]===1&&r[2]===1&&r[3]===12&&r[4]===31)return "";return ` (${r[2]} ${MON[r[1]-1]}–${r[4]} ${MON[r[3]-1]})`}
+function ruleLong(r){return `${r[0]===-1?"Every day":DAYS_LONG[r[0]]} ${hm(r[5])}–${hm(r[6])}, ${weeksTxt(r)}${seasonTxt(r)}`}
+function ruleShort(r){return `${r[0]===-1?"Daily":DAYS[r[0]]} ${hShort(r[5])}–${hShort(r[6])} · ${weeksTxt(r,true)}`}
+const live=()=>whenMs==null;
+function fmt(ms){const d=new Date(ms),r=new Date();const time=pad(d.getHours())+":"+pad(d.getMinutes());
+  if(ymd(d)===ymd(r))return "today "+time;
+  if(ymd(d)===ymd(new Date(r.getFullYear(),r.getMonth(),r.getDate()+1)))return "tomorrow "+time;
+  return `${DAYS[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]} ${time} (week ${isoWeek(d)}, ${isoWeek(d)%2?"odd":"even"})`}
+function dur(ms){const m=Math.round(ms/60000),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mm=m%60;return (d?d+" d ":"")+(d||h?h+" h ":"")+mm+" min"}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const code=s=>"M"+s[1]+(s[2]?"n":"");
+const segKey=s=>(s[5].length?"No parking "+s[5].map(ruleShort).join(" / "):"No cleaning")+" · "+code(s);
+const TRI='<svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M8 1L15 13H1Z" fill="#e00020" stroke="#ffe14d" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v4" stroke="#ffe14d" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.1" r="0.95" fill="#ffe14d"/></svg>';
+const TRI_COLD='<svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M8 1L15 13H1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.1" r="0.95" fill="currentColor"/></svg>';
+/* next cleaning window (start, end) at or after `at`, looking up to `days` ahead */
+function nextClean(at,rules,days){days=days||60;let best=null;const a=new Date(at);
+  for(const r of rules){for(let i=-1;i<=days;i++){const d=new Date(a.getFullYear(),a.getMonth(),a.getDate()+i);
+    if(!inSeason(d,r))continue;if(r[0]!==-1&&d.getDay()!==r[0])continue;const odd=isoWeek(d)%2===1;if(odd?!r[7]:!r[8])continue;
+    const s=new Date(d.getFullYear(),d.getMonth(),d.getDate(),Math.floor(r[5]/60),r[5]%60).getTime();
+    let e=new Date(d.getFullYear(),d.getMonth(),d.getDate(),Math.floor(r[6]/60),r[6]%60).getTime();if(r[6]<=r[5])e+=DAY;
+    if(e<=at)continue;if(!best||s<best.s)best={s,e,r,active:s<=at};break}}
+  return best}
+const dayDate=ms=>{const d=new Date(ms);return `${DAYS[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}`};
+const seasonShort=r=>(r[1]===1&&r[2]===1&&r[3]===12&&r[4]===31)?"":` · ${r[2]} ${MON[r[1]-1]}–${r[4]} ${MON[r[3]-1]}`;
+function untilTxt(e,at){const d=new Date(e);const t=pad(d.getHours())+":"+pad(d.getMinutes());return ymd(d)===ymd(new Date(at))?t:DAYS[d.getDay()]+" "+t}
+/* map label for a section: hot = cleaning now or within 7 days */
+function cleanLabel(s,at){if(!s[5].length)return{txt:"No cleaning · "+code(s),kind:"m"};
+  const n=nextClean(at,s[5]);const rs=s[5].map(r=>ruleShort(r)+seasonShort(r)).join(" / ");
+  if(n&&n.active)return{txt:`No parking ${live()?"now":"(start time)"} until ${untilTxt(n.e,at)} · ${rs} · ${code(s)}`,kind:"c"};
+  if(n&&n.s-at<=7*DAY)return{txt:`No parking ${rs} · next ${dayDate(n.s)} · ${code(s)}`,kind:"c"};
+  return{txt:`Cleaning ${rs} · ${n?"next "+dayDate(n.s):"out of season"} · ${code(s)}`,kind:"w"}}
+function banHTML(r){const at=CUR_AT,n=nextClean(at,[r]);
+  if(n&&n.active)return `<span class="ban">${TRI}No parking ${live()?"now":"at the start time"}, until ${untilTxt(n.e,at)}: ${ruleLong(r)}</span>`;
+  if(n&&n.s-at<=7*DAY)return `<span class="ban">${TRI}No parking ${ruleLong(r)}. Next: ${fmt(n.s,at)}</span>`;
+  return `<span class="ban cold">${TRI_COLD}Cleaning ${ruleLong(r)}. ${n?"Next: "+fmt(n.s,at):"Not in the next 60 days (out of season)"}</span>`}
+function otherTxt(l){return /^Taxa/.test(l)?l+" paid":l}
+
+/* ---------- geometry ---------- */
+const R=6371000, rad=Math.PI/180;
+function toXY(lat,lon,lat0,lon0){return[(lon-lon0)*rad*R*Math.cos(lat0*rad),(lat-lat0)*rad*R]}
+function distToLine(p,coords){
+  let best=1e9;const pts=coords.map(c=>toXY(c[0],c[1],p[0],p[1]));
+  if(pts.length===1)return Math.hypot(pts[0][0],pts[0][1]);
+  for(let i=0;i<pts.length-1;i++){const [x1,y1]=pts[i],[x2,y2]=pts[i+1];const dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy;
+    const u=L?Math.max(0,Math.min(1,(-x1*dx-y1*dy)/L)):0;best=Math.min(best,Math.hypot(x1+u*dx,y1+u*dy))}
+  return best;
+}
+function mid(coords){const a=coords[0],b=coords[coords.length-1];return[(a[0]+b[0])/2,(a[1]+b[1])/2]}
+/* which side of the street a point is on, using the street's own centre line from OpenStreetMap */
+function makeSide(si,ref){
+  const name=D.streets[si];const ways=D.roads.filter(r=>D.rnames[r[0]]===name).map(r=>r[2].map(c=>toXY(c[0],c[1],ref[0],ref[1])));
+  if(!ways.length)return null;
+  const all=ways.flat();const mx=all.reduce((s,p)=>s+p[0],0)/all.length,my=all.reduce((s,p)=>s+p[1],0)/all.length;
+  let sxx=0,syy=0,sxy=0;for(const [x,y] of all){sxx+=(x-mx)**2;syy+=(y-my)**2;sxy+=(x-mx)*(y-my)}
+  const ang=.5*Math.atan2(2*sxy,sxx-syy),ax=Math.cos(ang),ay=Math.sin(ang);
+  const segs=[];for(const w of ways)for(let i=0;i<w.length-1;i++){let a=w[i],b=w[i+1];if((b[0]-a[0])*ax+(b[1]-a[1])*ay<0)[a,b]=[b,a];segs.push([a,b])}
+  return function(lat,lon){const p=toXY(lat,lon,ref[0],ref[1]);let best=null;
+    for(const [a,b] of segs){const dx=b[0]-a[0],dy=b[1]-a[1],L=dx*dx+dy*dy;const u=L?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L)):0;
+      const d=Math.hypot(a[0]+u*dx-p[0],a[1]+u*dy-p[1]);if(!best||d<best.d)best={d,cr:dx*(p[1]-a[1])-dy*(p[0]-a[0])}}
+    return best&&best.d>1.5?Math.sign(best.cr):0};
+}
+
+/* ---------- street search (accents and spaces ignored, small typos allowed) ---------- */
+const fold=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[\s\-.]/g,"");
+function lev(a,b){const m=a.length,n=b.length;if(Math.abs(m-n)>3)return 9;let p=Array.from({length:n+1},(_,i)=>i);
+  for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function resolveStreet(input){
+  let f=fold(input);if(!f)return{si:-1,name:input};
+  if(/g$/.test(f)&&!/gatan$/.test(f))f+="atan";
+  if(/gata$/.test(f))f+="n";
+  const exact=D.streets.findIndex(s=>fold(s)===f);
+  if(exact>=0)return{si:exact,fuzzy:D.streets[exact].toLowerCase()!==input.trim().toLowerCase()};
+  const road=D.rnames.find(n=>n&&fold(n)===f);
+  if(road)return{si:-1,name:road};
+  const pre=D.streets.map((s,i)=>i).filter(i=>fold(D.streets[i]).startsWith(f));
+  if(pre.length===1&&f.length>=4)return{si:pre[0],fuzzy:true};
+  const thr=f.length<8?1:2;let best=null;
+  for(const n of new Set([...D.streets,...D.rnames])){if(!n)continue;const d=lev(f,fold(n));if(d<=thr&&(!best||d<best.d))best={n,d}}
+  if(best){const i=D.streets.indexOf(best.n);return i>=0?{si:i,fuzzy:true}:{si:-1,name:best.n,fuzzy:true}}
+  return{si:-1,name:input.trim()};
+}
+
+/* ---------- address lookup ---------- */
+function locate(si,numStr){
+  const m=/^(\d+)\s*([a-zA-Z]?)/.exec(numStr.trim());if(!m)return{err:"Enter a house number, like 12 or 14A."};
+  const n=+m[1],L=m[2].toUpperCase();
+  const list=D.addr.filter(a=>a[0]===si);
+  let hits=list.filter(a=>a[1]===n&&(!L||a[2]===L));
+  if(!hits.length)hits=list.filter(a=>a[1]===n);
+  if(hits.length){const lat=hits.reduce((s,a)=>s+a[3],0)/hits.length,lon=hits.reduce((s,a)=>s+a[4],0)/hits.length;return{p:[lat,lon],exact:true}}
+  const same=list.filter(a=>a[1]%2===n%2);
+  if(!same.length)return{p:null};
+  const lo=same.filter(a=>a[1]<n).sort((a,b)=>b[1]-a[1])[0],hi=same.filter(a=>a[1]>n).sort((a,b)=>a[1]-b[1])[0];
+  if(lo&&hi){const t=(n-lo[1])/(hi[1]-lo[1]);return{p:[lo[3]+(hi[3]-lo[3])*t,lo[4]+(hi[4]-lo[4])*t],exact:false}}
+  const a=lo||hi;return{p:[a[3],a[4]],exact:false};
+}
+
+/* ---------- week banner ---------- */
+function renderWeek(){
+  const now=new Date(),w=isoWeek(now),odd=w%2===1;
+  $("wkNum").textContent="Week "+w;
+  const p=$("wkPill");p.textContent=odd?"Odd week":"Even week";p.className="wk-pill "+(odd?"odd":"even");
+  const nx=new Date(now.getFullYear(),now.getMonth(),now.getDate()+7),w2=isoWeek(nx);
+  $("wkNext").textContent=`Next week is week ${w2} (${w2%2?"odd":"even"}). Today is ${DAYS_LONG[now.getDay()]} ${now.getDate()} ${MON[now.getMonth()]}.`;
+}
+
+/* ---------- result ---------- */
+function stepHTML(cls,mark,inner){return `<div class="step ${cls}"><div class="mark" aria-hidden="true">${mark}</div><div>${inner}</div></div>`}
+function verdictHTML(s,at,prefix){
+  const st=status(at,s),nx=nextChange(at,s,15*DAY);
+  if(st.ok){
+    let line,why;
+    if(nx==null||nx-at>14*DAY){line="No break in the next 14 days";why="Move within 14 days of parking."}
+    else{const w=status(nx,s);line=`until <strong>${fmt(nx,at)}</strong>`;why=`That's ${dur(nx-at)} ${live()?"from now":"after the start time"}. `+(w.why==="clean"?`Then street cleaning: ${ruleLong(w.r)}.`:"Then the night sign (n) stops covering residents.")}
+    return stepHTML("ok","P",`<div class="s-big">${prefix||""}You may park ${live()?"now":"at the start time"}</div>${live()?"":`<div class="s-sub">Start time: <strong>${fmt(at)}</strong></div>`}<div class="s-sub">${line}</div><div class="s-sub">${why}</div>`);
+  }
+  const reason=st.why==="clean"?`Street cleaning ${live()?"now":"at the start time"}: ${ruleLong(st.r)}.`:"Daytime: an n sign only covers residents at night.";
+  return stepHTML("no","✕",`<div class="s-big">${prefix||""}Not allowed ${live()?"now":"at the start time"}</div>${live()?"":`<div class="s-sub">Start time: <strong>${fmt(at)}</strong></div>`}<div class="s-sub">${nx?`Allowed from <strong>${fmt(nx,at)}</strong>, ${live()?"in "+dur(nx-at):dur(nx-at)+" after the start time"}.`:""}</div><div class="s-sub">${reason}</div>`);
+}
+function durShort(ms){const m=Math.round(ms/60000),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mm=m%60;return d?`${d} d ${h} h`:h?`${h} h ${mm} min`:`${mm} min`}
+function reasonAt(t,s){const w=status(t,s);return w.why==="clean"?`street cleaning starts (${ruleLong(w.r)})`:w.why==="day"?"the night sign (n) stops covering residents":"parking isn't allowed"}
+function periodHTML(s,at,end,prefix){prefix=prefix||"";const startTxt=live()?"now":fmt(at);const span=end-at;
+  const st=status(at,s),nxAll=nextChange(at,s,15*DAY);
+  if(!st.ok){const reason=st.why==="clean"?`Street cleaning at the start: ${ruleLong(st.r)}.`:"At the start time an n sign only covers residents at night.";
+    return stepHTML("no","✕",`<div class="s-big">${prefix}Not allowed at the start</div><div class="s-sub">${reason}</div><div class="s-sub">${nxAll?`Earliest start here: <strong>${fmt(nxAll)}</strong>.`:""}</div>`)}
+  const limit=at+14*DAY;const okUntil=Math.min(nxAll||Infinity,limit);
+  if(okUntil>=end)return stepHTML("ok","P",`<div class="s-big">${prefix}Your whole stay is allowed</div><div class="s-sub">From <strong>${startTxt}</strong> until <strong>${fmt(end)}</strong> (${durShort(span)}).</div><div class="s-sub">You could stay until ${fmt(okUntil)}${okUntil===limit?" (14-day limit)":""}.</div>`);
+  const why=(okUntil===limit&&(!nxAll||nxAll>limit))?"the 14-day limit is reached":reasonAt(okUntil,s);
+  const again=status(okUntil,s).ok?null:nextChange(okUntil,s,15*DAY);
+  return stepHTML("no","✕",`<div class="s-big">${prefix}Not for your whole stay</div><div class="s-sub">Allowed from ${startTxt} until <strong>${fmt(okUntil)}</strong> (${durShort(okUntil-at)}), then ${why}.</div><div class="s-sub">Move the car by ${fmt(okUntil)}${again?`. Parking here is allowed again from ${fmt(again)}`:""}.</div>`)}
+function verdictFor(s,at,prefix){return UNTIL?periodHTML(s,at,UNTIL,prefix):verdictHTML(s,at,prefix)}
+function stayFrom(s,at){if(!status(at,s).ok)return 0;const nx=nextChange(at,s,14*DAY);return nx?Math.min(nx-at,14*DAY):14*DAY}
+function buildNums(){D.nums=D.seg.map(()=>[]);const bySt={};D.seg.forEach((s,i)=>(bySt[s[0]]=bySt[s[0]]||[]).push(i));
+  for(const a of D.addr){const l=bySt[a[0]];if(!l)continue;let b=null;for(const i of l){const d=distToLine([a[3],a[4]],D.seg[i][4]);if(d<=35&&(!b||d<b.d))b={i,d}}if(b)D.nums[b.i].push(a[1])}}
+function rangeTxt(nums){const u=[...new Set(nums)];const odd=u.filter(n=>n%2),ev=u.filter(n=>n%2===0);
+  const r=a=>!a.length?"":Math.min(...a)===Math.max(...a)?""+a[0]:Math.min(...a)+"–"+Math.max(...a);return [r(odd),r(ev)].filter(Boolean).join(", ")}
+let SUG=[];
+function renderSug(center,at){
+  const groups={};
+  D.seg.forEach((s,i)=>{const d=distToLine(center,s[4]);if(d>500)return;const st=stayFrom(s,at);if(st<=0)return;
+    const k=s[0]+"|"+segKey(s)+"|"+st;const g=groups[k]||(groups[k]={s,idx:[],nums:[],d:1e9,st});
+    g.idx.push(i);g.nums.push(...D.nums[i]);if(d<g.d){g.d=d;g.near=i}});
+  SUG=Object.values(groups).sort((a,b)=>b.st-a.st||a.d-b.d).slice(0,7);
+  $("sugSec").hidden=false;
+  $("sugHint").textContent=SUG.length?`M sections within 500 m where you can park from ${live()?"now":"the start time"}, longest uninterrupted stay first. Tap one to see it on the map.`:`No M sections within 500 m allow parking at ${live()?"this moment":"the start time"}.`;
+  $("sug").innerHTML=SUG.map((g,j)=>{const s=g.s,rng=rangeTxt(g.nums),max=g.st>=14*DAY;
+    const until=at+g.st;const cov=UNTIL?(until>=UNTIL?`<span class="sg-cov">✓ covers your whole stay</span> · `:`Ends before your Until time · `):"";
+    return `<button type="button" class="sg" data-j="${j}" aria-pressed="false"><div class="sg-top"><span>${esc(D.streets[s[0]])}${rng?" "+rng:""}</span><span class="sg-dur">${max?"14 d (max)":durShort(g.st)}</span></div>
+    <div class="sg-bar" aria-hidden="true"><span style="width:${Math.max(3,g.st/(14*DAY)*100).toFixed(1)}%"></span></div>
+    <div class="sg-meta">${cov}Boende ${code(s)} · until ${fmt(until)}${max?" (14-day limit)":` (then ${reasonAt(until,s).replace(/ \(.*\)/,"")})`} · ${Math.round(g.d)} m away</div></button>`}).join("");
+}
+function focusSug(j){const g=SUG[j];if(!g||!MV)return;
+  document.querySelectorAll(".sg").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.j===j)));
+  const m=mid(D.seg[g.near][4]);MV.hl=g.idx;MV.lat=m[0];MV.lon=m[1];MV.k=Math.max(MV.k,2.4*Math.max(.7,MW/680));drawMap();
+  $("mapSec").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}
+function signDL(s,others){
+  const cl=s[5].length?s[5].map(banHTML).join("<br>"):"No cleaning registered";
+  return `<dl class="kv"><dt>Sign</dt><dd>Boende ${code(s)}${s[2]?" (nights only for residents)":" (around the clock)"}</dd><dt>Street cleaning</dt><dd>${cl}</dd><dt>Spaces</dt><dd>${s[3]||"–"}</dd>${others&&others.length?`<dt>Also here</dt><dd>${others.map(o=>`Boende ${code(o.s)}${o.s[2]?" (nights only)":""}, ${o.s[5].length?o.s[5].map(ruleLong).join("; "):"no cleaning"}, ${o.s[3]} spaces`).join("<br>")}. Check which sign your spot is under.</dd>`:""}</dl>`;
+}
+function run(){
+  if(!D)return;
+  const street=$("street").value.trim(),num=$("num").value.trim();
+  $("err").hidden=true;$("fuzzy").hidden=true;
+  if(!street||!num){showErr("Enter both a street and a number.");return}
+  const at=whenMs??Date.now();CUR_AT=at;
+  const uv=$("until").value;UNTIL=uv?new Date(uv).getTime():null;
+  if(UNTIL&&UNTIL<=at){showErr("Until must be after the start time.");UNTIL=null}
+  const res=resolveStreet(street);
+  const steps=$("steps");
+  if(res.si<0){
+    $("resTitle").textContent=`${res.name} ${num}`;
+    if(res.fuzzy){$("fuzzy").textContent=`Showing results for ${res.name}.`;$("fuzzy").hidden=false}
+    steps.innerHTML=stepHTML("no","✕",`<div class="s-title">Permit not valid here</div><div class="s-sub">${esc(res.name)} has no M4, M4n, M5 or M5n signs in the city's data, so your permit doesn't apply anywhere on it.</div>`);
+    $("mapSec").hidden=true;$("sugSec").hidden=true;last=null;return;
+  }
+  const si=res.si,sname=D.streets[si];
+  if(res.fuzzy){$("fuzzy").textContent=`Showing results for ${sname}.`;$("fuzzy").hidden=false}
+  $("resTitle").textContent=`${sname} ${num}`;
+  const loc=locate(si,num);
+  if(loc.err){showErr(loc.err);return}
+  const segs=D.seg.map((s,i)=>({s,i})).filter(o=>o.s[0]===si);
+  if(!loc.p){
+    steps.innerHTML=stepHTML("no","?",`<div class="s-title">House number not found</div><div class="s-sub">No address points on ${esc(sname)} for that number. The street does have M parking, shown on the map.</div>`);
+    $("sugSec").hidden=true;showMap(segs[0].s[4][0],si,null,at,num);last={};return;
+  }
+  renderSug(loc.p,at);
+  const side=makeSide(si,loc.p);const mySide=side?side(loc.p[0],loc.p[1]):0;
+  for(const o of segs){o.d=distToLine(loc.p,o.s[4]);const m=mid(o.s[4]);o.side=side?side(m[0],m[1]):0}
+  const sameSide=o=>!mySide||!o.side||o.side===mySide;
+  const mine=segs.filter(o=>o.d<=MAXD&&sameSide(o)).sort((a,b)=>a.d-b.d);
+  const across=segs.filter(o=>o.d<=MAXD+15&&!sameSide(o)).sort((a,b)=>a.d-b.d);
+  // other (non-permit) parking on my side near the number
+  let myOther=null;
+  D.other.forEach(o=>{const d=distToLine(loc.p,o[1]);if(d>30)return;const m=mid(o[1]);if(side&&mySide&&side(m[0],m[1])!==mySide)return;if(!myOther||d<myOther.d)myOther={d,l:D.olabels[o[0]]}});
+  const estNote=loc.exact?"":" (position estimated from nearby numbers)";
+  let html="";
+  if(mine.length){
+    const near=mine.filter(o=>o.d<=mine[0].d+12).sort((a,b)=>(a.s[2]-b.s[2])||(b.s[3]-a.s[3])||(a.d-b.d));
+    const best=near[0];
+    const others=near.slice(1).filter(o=>segKey(o.s)!==segKey(best.s));
+    html+=stepHTML("ok","✓",`<div class="s-title">Permit valid here</div><div class="s-sub">Sign <strong>Boende ${code(best.s)}</strong> on your side of ${esc(sname)} by number ${esc(num)}${estNote}. Your M4 permit covers it.</div>`);
+    html+=verdictFor(best.s,at)+signDL(best.s,others);
+    steps.innerHTML=html;showMap(loc.p,si,best.i,at,num);last={};return;
+  }
+  const otherLine=myOther?` The parking on your side by number ${esc(num)} is <strong>${esc(otherTxt(myOther.l))}</strong>, which your permit doesn't cover.`:"";
+  if(across.length){
+    const best=across[0];
+    html+=stepHTML("no","✕",`<div class="s-title">Not valid on your side</div><div class="s-sub">There are no M signs on your side of ${esc(sname)} by number ${esc(num)}${estNote}.${otherLine}</div>`);
+    html+=stepHTML("info","↔",`<div class="s-title">Across the street: Boende ${code(best.s)}</div><div class="s-sub">About ${Math.round(best.d)} m from your door, on the other side. Your permit is valid there:</div>`);
+    html+=verdictFor(best.s,at,"Across the street: ")+signDL(best.s);
+    steps.innerHTML=html;showMap(loc.p,si,best.i,at,num);last={};return;
+  }
+  const nearest=segs.slice().sort((a,b)=>a.d-b.d)[0];
+  html+=stepHTML("no","✕",`<div class="s-title">Permit not valid at this number</div><div class="s-sub">${esc(sname)} has M parking, but not by number ${esc(num)}.${otherLine} The nearest M section is about ${Math.round(nearest.d)} m away (see map).</div>`);
+  steps.innerHTML=html;showMap(loc.p,si,nearest.i,at,num);last={};
+}
+function showErr(t){const e=$("err");e.textContent=t;e.hidden=false}
+
+/* ---------- zoomable map ---------- */
+let MW=680,MH=560;
+function sizeMap(){const w=$("mapbox").clientWidth||680;MW=Math.round(Math.max(340,Math.min(680,w)));MH=Math.round(MW*(MW<500?1.05:.82))}
+function showMap(center,si,selIdx,at,num){
+  $("mapSec").hidden=false;
+  $("mapTitle").textContent=`${D.streets[si]} at ${fmt(at,Date.now())}`;
+  sizeMap();MV={lat:center[0],lon:center[1],home:center.slice(),k:1.6*Math.max(.7,MW/680),si,selIdx,at,num,pin:center,hl:null};
+  drawMap();
+}
+let raf=0;function redraw(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;drawMap()})}
+function drawMap(){
+  if(!MV)return;const {lat,lon,k,si,selIdx,at,num}=MV;
+  const P=(la,lo)=>{const [x,y]=toXY(la,lo,lat,lon);return[MW/2+x*k,MH/2-y*k]};
+  const box=g=>{for(const c of g){const [x,y]=P(c[0],c[1]);if(x>-60&&x<MW+60&&y>-60&&y<MH+60)return true}return false};
+  const path=g=>"M"+g.map(c=>P(c[0],c[1]).map(v=>v.toFixed(1)).join(" ")).join("L");
+  const sw=Math.max(.6,Math.min(1.8,k/1.6));
+  let roads="",majors="";const nameCand={};
+  for(const r of D.roads){if(!box(r[2]))continue;const d=path(r[2]);
+    if(r[1]>=2)majors+=`<path d="${d}"/>`;else roads+=`<path d="${d}"/>`;
+    const nm=D.rnames[r[0]];if(nm){const pts=r[2].map(c=>P(c[0],c[1])).filter(p=>p[0]>20&&p[0]<MW-20&&p[1]>20&&p[1]<MH-20);
+      let len=0;for(let i=1;i<pts.length;i++)len+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);
+      if(pts.length&&(!nameCand[nm]||len>nameCand[nm].len))nameCand[nm]={len,pts}}}
+  const placed=[];const fits=(x,y,w,h)=>{if(x<4||y<4||x+w>MW-56||y+h>MH-4)return false;for(const b of placed)if(x<b[0]+b[2]&&x+w>b[0]&&y<b[1]+b[3]&&y+h>b[1])return false;placed.push([x,y,w,h]);return true};
+  const pin=P(MV.pin[0],MV.pin[1]);placed.push([pin[0]-12,pin[1]-24,48,36]);
+  let oth="",othLab=[];
+  for(const o of D.other){if(!box(o[1]))continue;oth+=`<path d="${path(o[1])}"/>`;if(k>=3)othLab.push({pts:o[1].map(c=>P(c[0],c[1])),key:otherTxt(D.olabels[o[0]])+" · not valid"})}
+  let ok="",no="",noDash="",sel="",hl="";const hlSet=new Set(MV.hl||[]);const groups={},perSeg=[];
+  D.seg.forEach((s,i)=>{if(!box(s[4]))return;const d=path(s[4]);const st=status(at,s);
+    if(i===selIdx)sel=`<path d="${d}"/>`;
+    if(hlSet.has(i))hl+=`<path d="${d}"/>`;
+    if(st.ok)ok+=`<path d="${d}"/>`;else{no+=`<path d="${d}"/>`;noDash+=`<path d="${d}"/>`}
+    const pts=s[4].map(c=>P(c[0],c[1]));const pm=[(pts[0][0]+pts[pts.length-1][0])/2,(pts[0][1]+pts[pts.length-1][1])/2];
+    const cl=cleanLabel(s,at);const item={pm,key:cl.txt,kind:cl.kind,sel:i===selIdx||hlSet.has(i),ok:st.ok,own:s[0]===si||hlSet.has(i)};
+    if(k>=2.6)perSeg.push(item);else if(item.own)(groups[item.key]=groups[item.key]||[]).push(item)});
+  const labels=[];
+  const tryLabel=(g,key,cls)=>{const w=key.length*7.3+16+(cls==="c"||cls==="w"?22:0),h=22;
+    for(const [ox,oy] of [[14,-11],[-w-14,-11],[14,12],[-w-14,-34],[14,-36],[-w/2,18],[-w/2,-42]]){
+      const x=g.pm[0]+ox,y=g.pm[1]+oy;if(fits(x,y,w,h)){labels.push({x,y,w,h,key,cls,ok:g.ok,sel:g.sel,ax:g.pm[0],ay:g.pm[1]});return true}}return false};
+  if(k<2.6){Object.keys(groups).sort((a,b)=>(groups[b].some(g=>g.sel)?1:0)-(groups[a].some(g=>g.sel)?1:0)).forEach(key=>{
+    const c=groups[key].slice().sort((a,b)=>(b.sel?1:0)-(a.sel?1:0));for(const g of c)if(tryLabel(g,key,g.kind))break})}
+  else{perSeg.sort((a,b)=>(b.sel?2:b.own?1:0)-(a.sel?2:a.own?1:0)).forEach(g=>tryLabel(g,g.key,g.kind))}
+  for(const o of othLab){const pm=[(o.pts[0][0]+o.pts[o.pts.length-1][0])/2,(o.pts[0][1]+o.pts[o.pts.length-1][1])/2];
+    if(pm[0]>0&&pm[0]<MW&&pm[1]>0&&pm[1]<MH)tryLabel({pm,ok:null,sel:false},o.key,"o")}
+  let names="";
+  Object.entries(nameCand).sort((a,b)=>b[1].len-a[1].len).forEach(([nm,c])=>{const p=c.pts[Math.floor(c.pts.length/2)];const w=nm.length*6.6+6;
+    if(fits(p[0]-w/2,p[1]-8,w,16))names+=`<text x="${p[0].toFixed(0)}" y="${(p[1]+4).toFixed(0)}" text-anchor="middle" class="rn">${esc(nm)}</text>`});
+  let lab="";
+  for(const l of labels){
+    const fill=l.cls==="c"?"var(--ban-bg)":"var(--surface)";const tcls=l.cls==="c"?"lc":l.cls==="o"?"lo":"lm";
+    const triCold=l.cls==="w"?`<g transform="translate(${(l.x+6).toFixed(1)},${(l.y+4).toFixed(1)})"><path d="M8 1L15 13H1Z" fill="none" stroke="var(--ink)" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v4" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.1" r="0.95" fill="var(--ink)"/></g>`:"";
+    const tri=l.cls==="c"?`<g transform="translate(${(l.x+6).toFixed(1)},${(l.y+4).toFixed(1)})"><path d="M8 1L15 13H1Z" fill="#e00020" stroke="#ffe14d" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v4" stroke="#ffe14d" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.1" r="0.95" fill="#ffe14d"/></g>`:"";
+    const tx=l.cls==="c"||l.cls==="w"?l.x+28:l.x+8;
+    lab+=`<line x1="${l.ax.toFixed(1)}" y1="${l.ay.toFixed(1)}" x2="${(l.x+(l.x>l.ax?0:l.w)).toFixed(1)}" y2="${(l.y+l.h/2).toFixed(1)}" stroke="var(--ink)" stroke-width="1"/>`+
+    `<rect x="${l.x.toFixed(1)}" y="${l.y.toFixed(1)}" width="${l.w.toFixed(1)}" height="${l.h}" rx="4" fill="${fill}" stroke="var(--ink)" stroke-width="${l.sel?2.5:1}"${l.cls==="o"||l.cls==="w"?' stroke-dasharray="2 2"':""}/>`+tri+triCold+
+    `<text x="${tx.toFixed(1)}" y="${(l.y+15).toFixed(1)}" text-anchor="start" class="${tcls}">${esc(l.key)}</text>`}
+  const sb=k>=4?20:k>=2?50:100;
+  $("map").innerHTML=`<svg viewBox="0 0 ${MW} ${MH}" role="img" aria-label="Map of ${esc(D.streets[si])} with parking sections">
+  <style>.rn{font:600 11px var(--f-display);fill:var(--muted);paint-order:stroke;stroke:var(--halo);stroke-width:4px;stroke-linejoin:round}
+  .lc{font:800 11.5px var(--f-mono);fill:var(--ban-fg)} .lm{font:800 11.5px var(--f-mono);fill:var(--ink)} .lo{font:700 11px var(--f-mono);fill:var(--ink)}
+  .pl{font:900 13px var(--f-display);fill:var(--ink);paint-order:stroke;stroke:var(--halo);stroke-width:4px}</style>
+  <rect width="${MW}" height="${MH}" fill="var(--surface)"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <g stroke="var(--road)" stroke-width="${(7*sw).toFixed(1)}">${roads}</g><g stroke="var(--road-major)" stroke-width="${(10*sw).toFixed(1)}">${majors}</g>
+   <g stroke="var(--other)" stroke-width="${(4*sw).toFixed(1)}" stroke-dasharray="0.1 ${(6*sw).toFixed(1)}">${oth}</g>
+   <g stroke="var(--ink)" stroke-width="${(19*sw).toFixed(1)}">${hl}</g><g stroke="var(--surface)" stroke-width="${(13*sw).toFixed(1)}">${hl}</g>
+   <g stroke="var(--ink)" stroke-width="${(13*sw).toFixed(1)}">${sel}</g>
+   <g stroke="var(--ok)" stroke-width="${(7*sw).toFixed(1)}">${ok}</g>
+   <g stroke="var(--stop)" stroke-width="${(7*sw).toFixed(1)}">${no}</g>
+  </g>${names}${lab}
+  <circle cx="${pin[0].toFixed(1)}" cy="${pin[1].toFixed(1)}" r="7" fill="var(--pin)" stroke="var(--surface)" stroke-width="3"/>
+  <text x="${(pin[0]+11).toFixed(1)}" y="${(pin[1]-9).toFixed(1)}" class="pl">${esc(num)}</text>
+  <g transform="translate(14,${MH-18})"><line x1="0" y1="0" x2="${(sb*k).toFixed(0)}" y2="0" stroke="var(--ink)" stroke-width="2"/><text x="${(sb*k+6).toFixed(0)}" y="4" class="rn">${sb} m</text></g>
+  <text x="14" y="24" class="pl">N ↑</text></svg>`;
+}
+/* pan & zoom */
+function zoomAt(f,px,py){if(!MV)return;const k2=Math.max(.5,Math.min(9,MV.k*f));const mx=(px-MW/2)/MV.k,my=(MH/2-py)/MV.k;
+  const fx=mx*(1-MV.k/k2),fy=my*(1-MV.k/k2);MV.lat+=fy/(rad*R);MV.lon+=fx/(rad*R*Math.cos(MV.lat*rad));MV.k=k2;redraw()}
+function panBy(dx,dy){if(!MV)return;MV.lon-=dx/MV.k/(rad*R*Math.cos(MV.lat*rad));MV.lat+=dy/MV.k/(rad*R);redraw()}
+const mb=$("mapbox");const pts=new Map();let pinch=null;
+const toSvg=e=>{const r=mb.getBoundingClientRect();const s=MW/r.width;return[(e.clientX-r.left)*s,(e.clientY-r.top)*s,s]};
+mb.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;mb.setPointerCapture(e.pointerId);pts.set(e.pointerId,toSvg(e));mb.classList.add("drag");
+  if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1])}}});
+mb.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;const p=toSvg(e),q=pts.get(e.pointerId);
+  if(pts.size===1)panBy(p[0]-q[0],p[1]-q[1]);
+  pts.set(e.pointerId,p);
+  if(pts.size===2&&pinch){const [a,b]=[...pts.values()];const d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(d>0){zoomAt(d/pinch.d,(a[0]+b[0])/2,(a[1]+b[1])/2);pinch.d=d}}});
+const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size)mb.classList.remove("drag")};
+mb.addEventListener("pointerup",up);mb.addEventListener("pointercancel",up);
+mb.addEventListener("wheel",e=>{e.preventDefault();const p=toSvg(e);zoomAt(Math.exp(-e.deltaY*0.0015),p[0],p[1])},{passive:false});
+$("zin").onclick=()=>zoomAt(1.5,MW/2,MH/2);$("zout").onclick=()=>zoomAt(1/1.5,MW/2,MH/2);
+$("zreset").onclick=()=>{if(!MV)return;MV.lat=MV.home[0];MV.lon=MV.home[1];MV.k=1.6*Math.max(.7,MW/680);redraw()};
+
+/* ---------- wiring ---------- */
+const toLocal=ms=>{const d=new Date(ms);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes())};
+$("f").addEventListener("submit",e=>{e.preventDefault();try{localStorage.setItem("lastAddr",JSON.stringify([$("street").value,$("num").value]))}catch(_){}run()});
+$("when").addEventListener("input",e=>{whenMs=e.target.value?new Date(e.target.value).getTime():null;if(last)run()});
+$("until").addEventListener("input",()=>{if(last)run()});
+$("clearUntil").onclick=()=>{$("until").value="";if(last)run()};
+$("sug").addEventListener("click",e=>{const b=e.target.closest(".sg");if(b)focusSug(+b.dataset.j)});
+$("nowBtn").onclick=()=>{whenMs=null;$("when").value=toLocal(Date.now());if(last)run()};
+renderWeek();$("when").value=toLocal(Date.now());
+const REMOTE="https://marwa112.github.io/m4-parking/data.json";
+function useData(d){D=d;buildNums();$("streets").innerHTML=D.streets.map(s=>`<option value="${esc(s)}">`).join("");
+  $("dataNote").textContent=`Data: Göteborgs Stad open parking data (${D.seg.length} M sections on ${D.streets.length} streets, plus ${D.other.length} other parking sections) and OpenStreetMap addresses, downloaded ${D.v}.`;
+  let pre=["Sveagatan","12"];try{const v=JSON.parse(localStorage.getItem("lastAddr")||"null");if(v&&v[0])pre=v}catch(_){}
+  if(!$("street").value){$("street").value=pre[0];$("num").value=pre[1]}run();}
+function loadData(){
+  let cached=null;try{cached=JSON.parse(localStorage.getItem("pdata")||"null")}catch(_){}
+  fetch("data.json",{cache:"no-cache"}).then(r=>r.json()).then(d=>{useData(cached&&cached.v>d.v?cached:d)})
+  .catch(()=>{if(cached)useData(cached);else $("steps").innerHTML=`<p class="err">Couldn't load the street data. Check your connection and reopen the app.</p>`})
+  .finally(()=>{if(location.hostname==="marwa112.github.io")return;
+    fetch(REMOTE,{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{if(!d||!D||d.v<=D.v)return;
+      try{localStorage.setItem("pdata",JSON.stringify(d))}catch(_){}useData(d)}).catch(()=>{})});
+}
+loadData();
+/* GPS: fill in the nearest M-zone address */
+$("gpsBtn").onclick=()=>{const msg=$("gpsMsg");
+  if(!D){msg.textContent="Street data is still loading.";return}
+  if(!navigator.geolocation){msg.textContent="Location isn't available on this device.";return}
+  msg.textContent="Finding your position…";
+  navigator.geolocation.getCurrentPosition(pos=>{const p=[pos.coords.latitude,pos.coords.longitude];let best=null;
+    for(const a of D.addr){const [x,y]=toXY(a[3],a[4],p[0],p[1]);const d=Math.hypot(x,y);if(!best||d<best.d)best={a,d}}
+    if(!best||best.d>150){msg.textContent=`No M-zone street within 150 m of you (accuracy ±${Math.round(pos.coords.accuracy)} m).`;return}
+    $("street").value=D.streets[best.a[0]];$("num").value=best.a[1]+best.a[2];
+    msg.textContent=`Nearest address: ${D.streets[best.a[0]]} ${best.a[1]}${best.a[2]}, about ${Math.round(best.d)} m away (±${Math.round(pos.coords.accuracy)} m).`;run();},
+  err=>{msg.textContent=err.code===1?"Location permission was refused. Allow it in your phone's settings for this app.":"Couldn't get your position. Try again outdoors."},
+  {enableHighAccuracy:true,timeout:15000,maximumAge:30000})};
+if("serviceWorker" in navigator&&location.protocol==="https:"&&location.hostname!=="localhost")navigator.serviceWorker.register("sw.js").catch(()=>{});
+setInterval(()=>{renderWeek();if(last&&whenMs==null)run()},60000);
+})();
+</script>
+</body>
+</html>
