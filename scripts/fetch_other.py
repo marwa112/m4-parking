@@ -26,6 +26,10 @@ for L in layers:
         elif L=="tidsbegransad": lab="Time limited"+(f' {p.get("MaxParkingTime")}' if p.get("MaxParkingTime") else "")
         elif L in("pbolaget","privat"): lab="Parking company"
         else: lab=(p.get("ParkingCharge") or L.replace("_"," ").title())
-        out.append([lab,p.get("SiteName") or "",[[round(a,5),round(b,5)] for a,b in ll]]); cnt[L]+=1
+        extra=None
+        if L.lower().startswith("taxa"):
+            # price text and time limit from the city's own record, used for "pay instead of moving"
+            extra=[p.get("ParkingCost") or "",p.get("MaxParkingTime") or "",p.get("MaxParkingTimeLimitation") or ""]
+        out.append([lab,p.get("SiteName") or "",[[round(a,5),round(b,5)] for a,b in ll],extra]); cnt[L]+=1
 print(cnt); json.dump(out,open("other_parking.json","w"),ensure_ascii=False,separators=(",",":"))
 print(len(out))

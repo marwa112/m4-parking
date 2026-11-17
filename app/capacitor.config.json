@@ -2,5 +2,13 @@
   "appId": "se.marwa112.m4parking",
   "appName": "M4 Parking",
   "webDir": "www",
-  "android": { "allowMixedContent": false }
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_m4",
+      "iconColor": "#0B5CAD"
+    }
+  }
 }

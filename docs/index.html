@@ -83,6 +83,11 @@ input:focus{border-color:var(--sign);outline:none}
 .ban{display:inline-flex;align-items:center;gap:6px;background:var(--ban-bg);color:var(--ban-fg);font:800 .85rem var(--f-mono);padding:3px 8px 3px 6px;border-radius:5px;border:1.5px solid var(--ink);margin:1px 0}
 .ban svg{flex:none}
 .legend .ban{white-space:nowrap}
+.payrow{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 8px}
+.paybtn{display:inline-flex;align-items:center;font:900 1rem var(--f-display);padding:12px 16px;border-radius:10px;background:var(--sign);color:#fff;text-decoration:none}
+.lnk{text-decoration:none;display:inline-flex;align-items:center}
+.carhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+#carSec .steps,#car{display:flex;flex-direction:column;gap:12px}
 .ban.cold{background:var(--surface);color:var(--ink);border-style:dashed}
 .err{font-weight:700;color:var(--no);font-size:.9rem;margin:0}
 
@@ -115,6 +120,11 @@ body{margin:0} img{max-width:100%} [hidden]{display:none!important}
       <div class="wk-pill" id="wkPill">–</div>
       <div class="wk-next" id="wkNext"></div>
     </div>
+  </section>
+
+  <section id="carSec" hidden aria-live="polite">
+    <h2>My car</h2>
+    <div id="car"></div>
   </section>
 
   <section>
@@ -431,6 +441,7 @@ function run(){
     const others=near.slice(1).filter(o=>segKey(o.s)!==segKey(best.s));
     html+=stepHTML("ok","✓",`<div class="s-title">Permit valid here</div><div class="s-sub">Sign <strong>Boende ${code(best.s)}</strong> on your side of ${esc(sname)} by number ${esc(num)}${estNote}. Your M4 permit covers it.</div>`);
     html+=verdictFor(best.s,at)+signDL(best.s,others);
+    LAST_SPOT={seg:best.s,street:sname,num,p:loc.p};html+=parkBtnHTML();
     steps.innerHTML=html;showMap(loc.p,si,best.i,at,num);last={};return;
   }
   const otherLine=myOther?` The parking on your side by number ${esc(num)} is <strong>${esc(otherTxt(myOther.l))}</strong>, which your permit doesn't cover.`:"";
@@ -439,6 +450,7 @@ function run(){
     html+=stepHTML("no","✕",`<div class="s-title">Not valid on your side</div><div class="s-sub">There are no M signs on your side of ${esc(sname)} by number ${esc(num)}${estNote}.${otherLine}</div>`);
     html+=stepHTML("info","↔",`<div class="s-title">Across the street: Boende ${code(best.s)}</div><div class="s-sub">About ${Math.round(best.d)} m from your door, on the other side. Your permit is valid there:</div>`);
     html+=verdictFor(best.s,at,"Across the street: ")+signDL(best.s);
+    LAST_SPOT={seg:best.s,street:sname,num:num+" (across)",p:loc.p};html+=parkBtnHTML().replace("I parked here","I parked across the street");
     steps.innerHTML=html;showMap(loc.p,si,best.i,at,num);last={};return;
   }
   const nearest=segs.slice().sort((a,b)=>a.d-b.d)[0];
@@ -542,6 +554,129 @@ mb.addEventListener("wheel",e=>{e.preventDefault();const p=toSvg(e);zoomAt(Math.
 $("zin").onclick=()=>zoomAt(1.5,MW/2,MH/2);$("zout").onclick=()=>zoomAt(1/1.5,MW/2,MH/2);
 $("zreset").onclick=()=>{if(!MV)return;MV.lat=MV.home[0];MV.lon=MV.home[1];MV.k=1.6*Math.max(.7,MW/680);redraw()};
 
+/* ---------- my car: pay instead of moving ---------- */
+const PG_PKG="se.goteborg.pbolaget.android",SMS_NO="72430",SMS_SHOW="72 430";
+const PG_PLAY="https://play.google.com/store/apps/details?id="+PG_PKG,PG_IOS="https://apps.apple.com/se/app/parkering-g%C3%B6teborg/id1184264972";
+const isNative=()=>!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+/* Android app only: Capacitor's core script (added to the APK at build time) registers native plugins */
+const _plugs={};
+const plug=n=>{const C=window.Capacitor,ex=window.capacitorExports;if(!C)return null;if(_plugs[n])return _plugs[n];
+  if(C.Plugins&&C.Plugins[n])return _plugs[n]=C.Plugins[n];
+  if(ex&&ex.registerPlugin&&(C.PluginHeaders||[]).some(h=>h.name===n))return _plugs[n]=ex.registerPlugin(n);return null};
+let CAR=null,LAST_SPOT=null;
+try{CAR=JSON.parse(localStorage.getItem("car")||"null")}catch(_){}
+function saveCar(){try{CAR?localStorage.setItem("car",JSON.stringify(CAR)):localStorage.removeItem("car")}catch(_){}}
+const hhmm=ms=>{const d=new Date(ms);return pad(d.getHours())+":"+pad(d.getMinutes())};
+const smsHref=body=>`sms:${SMS_NO}?body=${encodeURIComponent(body)}`;
+function pgHref(){const ua=navigator.userAgent;
+  if(/Android/i.test(ua))return `intent://#Intent;package=${PG_PKG};S.browser_fallback_url=${encodeURIComponent(PG_PLAY)};end`;
+  return /iPhone|iPad/i.test(ua)?PG_IOS:PG_PLAY}
+async function openPG(){const AL=plug("AppLauncher");
+  if(AL){try{const r=await AL.openUrl({url:PG_PKG});if(r&&r.completed===false)throw 0;return}catch(_){try{await AL.openUrl({url:PG_PLAY})}catch(__){}return}}
+  location.href=pgHref()}
+async function openSMS(body){const AL=plug("AppLauncher");
+  if(AL){try{await AL.openUrl({url:smsHref(body)});return}catch(_){}}
+  location.href=smsHref(body)}
+
+/* price for a stay, from the city's own price text, e.g. "34 kr/tim 8-22 alla dagar. Övrig tid: 2 kr/tim" */
+function estCost(txt,from,to){const m=/(\d+)\s*kr\/(tim|30\s*min)\s*(\d{1,2})\s*-\s*(\d{1,2})/.exec(txt||"");if(!m)return null;
+  const rate=+m[1]*(m[2]==="tim"?1:2),h0=+m[3],h1=+m[4];const o=/Övrig tid:\s*(\d+)\s*kr\/tim/i.exec(txt);const other=o?+o[1]:0;
+  let sum=0;for(let t=from;t<to;t+=STEP){const h=new Date(t).getHours();sum+=(h>=h0&&h<h1?rate:other)/4}return Math.round(sum)}
+
+/* what happens to the parked car: free until when, then pay or move */
+function plan(c,now){
+  const s=c.seg,limit=c.at+14*DAY;
+  if(now>=limit)return{state:"limit"};
+  const st=status(now,s);let t=now;const res={};
+  if(st.ok){const nx=nextChange(now,s,15*DAY);res.state="free";res.freeUntil=Math.min(nx==null?Infinity:nx,limit);t=res.freeUntil;if(t===Infinity)return res}
+  else res.state="blocked";
+  if(t>=limit){res.then="limit";return res}
+  const w=status(t,s);
+  if(w.why==="clean"){res.then="clean";res.r=w.r;res.again=nextChange(t,s,15*DAY);return res}
+  if(w.why==="day"&&c.paid){let u=Math.ceil(t/STEP)*STEP,clean=null;
+    for(;u<=t+3*DAY;u+=STEP){const x=status(u,s);if(x.ok)break;if(x.why==="clean"){clean={at:u,r:x.r};break}}
+    res.then="pay";res.payFrom=t;res.payUntil=clean?clean.at:Math.min(u,limit);res.clean=clean;
+    const mx=/(\d+)\s*(tim|min)/.exec(c.paid[3]||"");const maxMs=mx?(+mx[1])*(mx[2]==="tim"?3600000:60000):Infinity;
+    if(res.payUntil-t>maxMs){res.payUntil=t+maxMs;res.maxCut=c.paid[3];res.clean=null}
+    res.cost=estCost(c.paid[2],t,res.payUntil);return res}
+  res.then="move";res.again=nextChange(t,s,15*DAY);return res;
+}
+function payButtons(c){const code=c.paid[1];
+  return `<div class="payrow"><a class="paybtn" href="${pgHref()}" data-act="app">Open Parkering Göteborg</a>
+  ${code?`<a class="ghost lnk" href="${smsHref(code)}" data-act="sms">Pay by SMS: "${code}" to ${SMS_SHOW}</a>`:""}
+  <a class="ghost lnk" href="${smsHref("avsluta")}" data-act="stop">Stop SMS parking</a></div>
+  <p class="hint">${code?`Check that the sign says platskod <strong>${code}</strong> for Parkering Göteborg. Other apps use other codes. `:""}SMS parking needs a Parkering Göteborg account and is invoiced. The app or SMS does the payment; you confirm it there.</p>`}
+function renderCar(){
+  const sec=$("carSec");if(!sec)return;
+  if(!CAR||!D){sec.hidden=true;return}
+  sec.hidden=false;const now=Date.now(),p=plan(CAR,now),c=CAR;
+  const where=`${esc(c.street)} ${esc(c.num)}`,sign=`Boende ${code(c.seg)}`;
+  let html=`<div class="carhead"><div><div class="s-title">${where}</div><div class="s-sub">${sign} · parked ${fmt(c.at)}</div></div><button class="ghost" type="button" id="moved">I moved the car</button></div>`;
+  const payInfo=()=>`<dl class="kv"><dt>Paid parking</dt><dd>${esc(c.paid[0])} · ${esc(c.paid[2])}</dd>${c.paid[3]?`<dt>Max time</dt><dd>${esc(c.paid[3])}</dd>`:""}</dl>`;
+  if(p.state==="limit"){html+=stepHTML("no","✕",`<div class="s-big">Move the car</div><div class="s-sub">The 14-day limit on this spot ended ${fmt(c.at+14*DAY)}.</div>`)}
+  else if(p.state==="free"&&p.freeUntil===Infinity){html+=stepHTML("ok","P",`<div class="s-big">Free, no end in sight</div><div class="s-sub">Move within 14 days, by ${fmt(c.at+14*DAY)}.</div>`)}
+  else{
+    const freeTxt=p.state==="free"?stepHTML("ok","P",`<div class="s-big">Free until ${fmt(p.freeUntil)}</div><div class="s-sub">That's ${dur(p.freeUntil-now)} from now.</div>`):"";
+    let next="";
+    if(p.then==="pay"){
+      const nowPaying=p.state==="blocked";
+      const until=p.maxCut?`but only for ${esc(p.maxCut)} (the maximum time here), so until ${fmt(p.payUntil)}; then you must move`:p.clean?`until ${fmt(p.payUntil)}, when street cleaning starts and you must move`:`until ${fmt(p.payUntil)}, when your permit covers the spot again`;
+      next=stepHTML(nowPaying?"no":"info",nowPaying?"kr":"→",`<div class="s-big">${nowPaying?"Pay now or move":"Then: pay or move"}</div>
+        <div class="s-sub">From ${nowPaying?"now":fmt(p.payFrom)} the night sign stops covering residents, but you can stay if you pay, ${until}.${p.cost!=null?` About <strong>${p.cost} kr</strong> at the city's rate, plus any app fee.`:""}</div>
+        ${payInfo()}${payButtons(c)}`);
+    }else if(p.then==="clean"){next=stepHTML("no","⚠",`<div class="s-big">Then: move the car</div><div class="s-sub"><span class="ban">${TRI}No parking ${ruleLong(p.r)}</span></div><div class="s-sub">Street cleaning can't be paid for. ${p.again?`Allowed again from ${fmt(p.again)}.`:""}</div>`)}
+    else if(p.then==="limit"){next=stepHTML("no","✕",`<div class="s-big">Then: move the car</div><div class="s-sub">The 14-day limit ends ${fmt(c.at+14*DAY)}.</div>`)}
+    else if(p.then==="move"){next=stepHTML("no","✕",`<div class="s-big">${p.state==="blocked"?"Move the car now":"Then: move the car"}</div><div class="s-sub">There's no paid parking to fall back on here.${p.again?` Allowed again from ${fmt(p.again)}.`:""}</div>`)}
+    html+=freeTxt+next;
+  }
+  html+=`<p class="hint">${isNative()?"You'll get a reminder 15 minutes before your free time ends, and again when it ends.":"Reminders work in the Android app. Here, check back before your free time ends."}</p>`;
+  $("car").innerHTML=html;
+}
+async function scheduleCar(){
+  const LN=plug("LocalNotifications");if(!LN||!isNative())return;
+  try{await LN.cancel({notifications:[101,102,103,104].map(id=>({id}))})}catch(_){}
+  if(!CAR)return;
+  const now=Date.now(),p=plan(CAR,now),where=`${CAR.street} ${CAR.num}`,list=[];
+  const at=(ms,id,title,body,type)=>{if(ms>now+5000)list.push({id,title,body,schedule:{at:new Date(ms),allowWhileIdle:true},actionTypeId:type,extra:{car:1}})};
+  const payBody=p.then==="pay"?`Pay ${CAR.paid[0]}${CAR.paid[1]?` (platskod ${CAR.paid[1]})`:""} until ${hhmm(p.payUntil)}, or move the car.`:"";
+  const moveBody=p.then==="clean"?`Street cleaning: ${ruleLong(p.r)}. It can't be paid for.`:p.then==="limit"?"The 14-day limit ends.":"There's no paid parking to fall back on here.";
+  if(p.state==="free"&&p.freeUntil!==Infinity){
+    const pay=p.then==="pay";
+    at(p.freeUntil-15*60000,101,`Free parking ends ${hhmm(p.freeUntil)} · ${where}`,pay?payBody:"Move the car. "+moveBody,pay?"PAY":undefined);
+    at(p.freeUntil,102,pay?`Pay now or move · ${where}`:`Move the car now · ${where}`,pay?payBody:moveBody,pay?"PAY":undefined);
+  }
+  if(p.then==="pay"&&p.maxCut)at(p.payUntil-10*60000,103,`Move the car by ${hhmm(p.payUntil)} · ${where}`,`Maximum parking time here is ${p.maxCut}.`,"STOP");
+  else if(p.then==="pay"&&!p.clean)at(p.payUntil,103,`Stop paying · ${where}`,`Your permit covers the spot again from ${hhmm(p.payUntil)}. Stop the parking in Parkering Göteborg, or send "avsluta" to ${SMS_SHOW}.`,"STOP");
+  if(p.then==="pay"&&p.clean)at(p.clean.at-15*60000,103,`Move the car by ${hhmm(p.clean.at)} · ${where}`,`Street cleaning starts. Stop the paid parking and move.`,"STOP");
+  at(CAR.at+14*DAY-3600000,104,`14-day limit in 1 hour · ${where}`,`Move the car before ${hhmm(CAR.at+14*DAY)}.`);
+  if(list.length){try{await LN.schedule({notifications:list})}catch(_){}}
+}
+async function setupNative(){
+  const LN=plug("LocalNotifications");if(!LN||!isNative())return;
+  try{await LN.registerActionTypes({types:[
+    {id:"PAY",actions:[{id:"app",title:"Open Parkering Göteborg"},{id:"sms",title:"Pay by SMS"}]},
+    {id:"STOP",actions:[{id:"app",title:"Open Parkering Göteborg"},{id:"stop",title:"Stop by SMS"}]}]})}catch(_){}
+  LN.addListener("localNotificationActionPerformed",e=>{const a=e.actionId;
+    if(a==="app")openPG();else if(a==="sms"&&CAR&&CAR.paid)openSMS(CAR.paid[1]);else if(a==="stop")openSMS("avsluta");
+    else{renderCar();const s=$("carSec");if(s&&!s.hidden)s.scrollIntoView()}});
+  const App=plug("App");if(App)App.addListener("appStateChange",st=>{if(st.isActive){renderCar();scheduleCar()}});
+}
+function parkHere(){
+  if(!LAST_SPOT)return;const s=LAST_SPOT.seg;
+  CAR={street:LAST_SPOT.street,num:LAST_SPOT.num,seg:s,paid:(s[6]!=null&&s[6]>=0&&D.paid)?D.paid[s[6]]:null,at:Date.now(),p:LAST_SPOT.p};
+  saveCar();renderCar();$("carSec").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  const LN=plug("LocalNotifications");
+  if(LN&&isNative())LN.requestPermissions().then(()=>scheduleCar()).catch(()=>scheduleCar());
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("#parkBtn")){parkHere();return}
+  if(e.target.closest("#moved")){CAR=null;saveCar();renderCar();scheduleCar();return}
+  const a=e.target.closest("[data-act]");if(!a||!isNative())return;   // on the web, the links work by themselves
+  e.preventDefault();const act=a.dataset.act;
+  if(act==="app")openPG();else if(act==="sms"&&CAR&&CAR.paid)openSMS(CAR.paid[1]);else if(act==="stop")openSMS("avsluta");
+});
+function parkBtnHTML(){return `<button class="go" type="button" id="parkBtn" style="width:100%;margin-top:12px">I parked here</button>`}
+
 /* ---------- wiring ---------- */
 const toLocal=ms=>{const d=new Date(ms);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes())};
 $("f").addEventListener("submit",e=>{e.preventDefault();try{localStorage.setItem("lastAddr",JSON.stringify([$("street").value,$("num").value]))}catch(_){}run()});
@@ -555,7 +690,7 @@ const REMOTE="https://marwa112.github.io/m4-parking/data.json";
 function useData(d){D=d;buildNums();$("streets").innerHTML=D.streets.map(s=>`<option value="${esc(s)}">`).join("");
   $("dataNote").textContent=`Data: Göteborgs Stad open parking data (${D.seg.length} M sections on ${D.streets.length} streets, plus ${D.other.length} other parking sections) and OpenStreetMap addresses, downloaded ${D.v}.`;
   let pre=["Sveagatan","12"];try{const v=JSON.parse(localStorage.getItem("lastAddr")||"null");if(v&&v[0])pre=v}catch(_){}
-  if(!$("street").value){$("street").value=pre[0];$("num").value=pre[1]}run();}
+  if(!$("street").value){$("street").value=pre[0];$("num").value=pre[1]}run();renderCar();scheduleCar();}
 function loadData(){
   let cached=null;try{cached=JSON.parse(localStorage.getItem("pdata")||"null")}catch(_){}
   fetch("data.json",{cache:"no-cache"}).then(r=>r.json()).then(d=>{useData(cached&&cached.v>d.v?cached:d)})
@@ -578,7 +713,9 @@ $("gpsBtn").onclick=()=>{const msg=$("gpsMsg");
   err=>{msg.textContent=err.code===1?"Location permission was refused. Allow it in your phone's settings for this app.":"Couldn't get your position. Try again outdoors."},
   {enableHighAccuracy:true,timeout:15000,maximumAge:30000})};
 if("serviceWorker" in navigator&&location.protocol==="https:"&&location.hostname!=="localhost")navigator.serviceWorker.register("sw.js").catch(()=>{});
-setInterval(()=>{renderWeek();if(last&&whenMs==null)run()},60000);
+setInterval(()=>{renderWeek();renderCar();if(last&&whenMs==null)run()},60000);
+setupNative();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)renderCar()});
 })();
 </script>
 </body>
