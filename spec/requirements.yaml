@@ -1,0 +1,489 @@
+# M4 Parking Check: requirements catalogue
+# Single source for the specification (HTML) and the test matrix (Excel).
+#
+# IDs never change and are never reused. A removed requirement gets status "Withdrawn".
+#   EP-nn         epic
+#   FE-nn.mm      feature
+#   FR-nn.mm.kkk  functional requirement
+#   NFR-CAT-nnn   non-functional requirement
+#
+# Fields of a requirement
+#   p    priority (MoSCoW): Must | Should | Could | Won't
+#   v    verification: T = test, D = demonstration, I = inspection, A = analysis
+#   st   status: Implemented | Implemented, not verified on device | Partly | Open | Withdrawn
+#   src  source: see "sources" below
+#   text the requirement, in ASD-STE100 style (strict)
+
+version: 0.2-draft
+date: 2026-11-17
+
+sources:
+  U1: "User request, 2026-10-19: check where and when an M4 permit allows parking"
+  U2: "User request, 2026-10-19: address lookup, permit check first, then now, how long or from when"
+  U3: "User request, 2026-10-19: high contrast, no red/green colour pairs (colour vision)"
+  U4: "User request, 2026-10-19: map labels show odd or even week, app shows the week number"
+  U5: "User request, 2026-10-19: zoomable map, fuzzy street search, both sides of the street"
+  U6: "User request, 2026-10-19: cleaning warning style, legend wording, 'now' only for live time"
+  U7: "User request, 2026-10-19: until time, longest stays nearby as bars"
+  U8: "User request, 2026-10-20: Android app, web app, no keys in the repository"
+  U9: "User request, 2026-11-17: pay through the parking app when free time ends, SMS as fallback"
+  U10: "User preference: never overwrite, every change is a new version"
+  R1: "Göteborgs Stad, Regler för boendeparkering (regler_boendeparkering_260309.pdf)"
+  C1: "Göteborgs Stad open WFS service, open.geodata.tkgbg.se"
+  O1: "OpenStreetMap (addresses and streets)"
+  P1: "Parkering Göteborg, Betala parkering (app, SMS 72 430, platskod)"
+  P2: "hittaparkering.com, Parkeringszoner i Göteborg (platskod per taxa), third-party"
+  D1: "Design decision during the build (see Solution design)"
+
+glossary:
+  - {term: "Permit", text: "The M4 residential parking permit (boendeparkeringstillstånd) of the user. Zone letter M, taxa 4."}
+  - {term: "Zone letter", text: "The letter on a residential parking sign that names the permit area, for example M."}
+  - {term: "Taxa", text: "A price class. On a residential sign, the permit is valid on the same or a higher taxa number. On a paid parking sign, the taxa sets the price."}
+  - {term: "Night sign", text: "A residential parking sign with the letter n, for example M4n. It allows residents to park only at night and on Sundays and public holidays."}
+  - {term: "Parking section", text: "A part of a street where one set of parking rules applies, as recorded in the city data."}
+  - {term: "M section", text: "A parking section with a residential parking sign with zone letter M."}
+  - {term: "Street cleaning", text: "Hours when nobody can park in a parking section, so that the city can clean the street."}
+  - {term: "Week type", text: "Odd week or even week, from the ISO 8601 week number."}
+  - {term: "Start time", text: "The date and time that the app checks. By default, the current time."}
+  - {term: "Until time", text: "An optional end date and time. The app then checks the full period from the start time."}
+  - {term: "Free time", text: "The period when the permit allows the user to park without payment."}
+  - {term: "Platskod", text: "The code that a payment app or SMS uses for a parking area. It can be different in each payment app."}
+  - {term: "Address", text: "A street name and a house number, for example Sveagatan 12."}
+  - {term: "Pipeline", text: "The scripts and workflows that download, match and publish the street data."}
+  - {term: "Web app", text: "The app in a web browser, on marwa112.github.io/m4-parking."}
+  - {term: "Android app", text: "The app as an APK file that the user installs on an Android phone."}
+
+epics:
+
+- id: EP-01
+  title: Address and permit check
+  goal: The user enters an address. The app tells the user if the permit is valid at that address.
+  features:
+  - id: FE-01.01
+    title: Street search
+    description: The user types a street name. The app finds the correct street even when the user types it differently.
+    requirements:
+    - {id: FR-01.01.001, p: Must, v: T, st: Implemented, src: U2, text: "The app shall let the user enter a street name and a house number."}
+    - {id: FR-01.01.002, p: Must, v: T, st: Implemented, src: U5, text: "The app shall find a street name that the user types without accents. Example: 'Linnegatan' finds 'Linnégatan'."}
+    - {id: FR-01.01.003, p: Should, v: T, st: Implemented, src: U5, text: "The app shall ignore letter case, spaces, hyphens and full stops when it compares street names."}
+    - {id: FR-01.01.004, p: Could, v: T, st: Implemented, src: D1, text: "The app shall accept a street name that ends in 'g' or 'gata' as a short form of 'gatan'."}
+    - {id: FR-01.01.005, p: Could, v: T, st: Implemented, src: U5, text: "The app shall accept one wrong letter in a street name with fewer than 8 letters, and two wrong letters in a longer name."}
+    - {id: FR-01.01.006, p: Must, v: T, st: Implemented, src: U5, text: "When the app uses a corrected street name, the app shall show the street name that it uses."}
+    - {id: FR-01.01.007, p: Should, v: D, st: Implemented, src: D1, text: "The app shall suggest street names from the M-zone street list while the user types."}
+    - {id: FR-01.01.008, p: Could, v: T, st: Implemented, src: D1, text: "The app shall keep the last address that the user checked on the device, and show it at the next start."}
+  - id: FE-01.02
+    title: House number location
+    description: The app finds the position of the house number on the street.
+    requirements:
+    - {id: FR-01.02.001, p: Must, v: T, st: Implemented, src: U2, text: "The app shall find the position of the house number from the address data."}
+    - {id: FR-01.02.002, p: Must, v: T, st: Implemented, src: U2, text: "The app shall accept a house number with a letter, for example 14A."}
+    - {id: FR-01.02.003, p: Should, v: T, st: Implemented, src: D1, text: "If the address data has no house number with that letter, the app shall use the house number without the letter."}
+    - {id: FR-01.02.004, p: Should, v: T, st: Implemented, src: D1, text: "If the address data has no such house number, the app shall estimate the position. It shall use the nearest numbers with the same odd or even value."}
+    - {id: FR-01.02.005, p: Must, v: T, st: Implemented, src: D1, text: "When the app estimates the position, the app shall tell the user."}
+    - {id: FR-01.02.006, p: Must, v: T, st: Implemented, src: D1, text: "If the street has no house number with the same odd or even value, the app shall show 'House number not found'."}
+  - id: FE-01.03
+    title: Permit validity
+    description: The app checks the residential parking signs near the house number against the permit.
+    requirements:
+    - {id: FR-01.03.001, p: Must, v: T, st: Implemented, src: R1, text: "The app shall treat the permit as valid only on residential parking signs with zone letter M."}
+    - {id: FR-01.03.002, p: Must, v: T, st: Implemented, src: R1, text: "The app shall treat the permit as valid only on signs with taxa 4 or a higher taxa. In zone M, these signs are M4, M4n, M5 and M5n."}
+    - {id: FR-01.03.003, p: Must, v: T, st: Implemented, src: U2, text: "If the street has no M section, the app shall show 'Permit not valid here'."}
+    - {id: FR-01.03.004, p: Must, v: T, st: Implemented, src: U2, text: "The app shall show the sign text of the M section that it uses, for example 'Boende M4n'."}
+    - {id: FR-01.03.005, p: Must, v: T, st: Implemented, src: D1, text: "The app shall use only M sections that are 45 metres or less from the position of the house number."}
+    - {id: FR-01.03.006, p: Must, v: T, st: Implemented, src: D1, text: "If the street has M sections, but none near the house number, the app shall show the distance to the nearest M section."}
+    - {id: FR-01.03.007, p: Should, v: T, st: Implemented, src: D1, text: "If two or more M sections are near, the app shall use a section without n first, then the section with more spaces."}
+    - {id: FR-01.03.008, p: Should, v: T, st: Implemented, src: D1, text: "The app shall list the other near M sections with different rules under 'Also here'."}
+  - id: FE-01.04
+    title: Side of the street
+    description: The app knows which side of the street the house number is on, and checks that side first.
+    requirements:
+    - {id: FR-01.04.001, p: Must, v: T, st: Implemented, src: U5, text: "The app shall find the side of the street of the house number from the street centre line."}
+    - {id: FR-01.04.002, p: Must, v: T, st: Implemented, src: U5, text: "The app shall use M sections on the side of the house number before M sections on the other side."}
+    - {id: FR-01.04.003, p: Must, v: T, st: Implemented, src: U5, text: "If only the other side has an M section, the app shall show 'Not valid on your side' and the M section across the street."}
+    - {id: FR-01.04.004, p: Should, v: T, st: Implemented, src: U5, text: "If the side of the house number has other parking, the app shall name it. Example: 'Taxa A paid'."}
+
+- id: EP-02
+  title: Time rules engine
+  goal: The app calculates when the permit allows parking in an M section.
+  features:
+  - id: FE-02.01
+    title: Night signs
+    description: Night signs allow residents to park only at night, and on Sundays and public holidays.
+    requirements:
+    - {id: FR-02.01.001, p: Must, v: T, st: Implemented, src: R1, text: "On a night sign, the app shall allow parking on weekdays from 18:00 until 09:00 the next day."}
+    - {id: FR-02.01.002, p: Must, v: T, st: Implemented, src: R1, text: "On a night sign, the app shall allow parking from 15:00 on the day before a Sunday or a public holiday."}
+    - {id: FR-02.01.003, p: Must, v: T, st: Implemented, src: R1, text: "On a night sign, the app shall allow parking all day on Sundays and public holidays."}
+    - {id: FR-02.01.004, p: Must, v: T, st: Implemented, src: R1, text: "The app shall calculate the Swedish public holidays for each year, including the holidays with dates that change every year."}
+    - {id: FR-02.01.005, p: Should, v: T, st: Implemented, src: D1, text: "The app shall treat Midsummer Eve, Christmas Eve and New Year's Eve as days before a holiday, not as holidays."}
+    - {id: FR-02.01.006, p: Must, v: T, st: Implemented, src: R1, text: "On a sign without n, the app shall allow parking at all hours, except during street cleaning."}
+  - id: FE-02.02
+    title: Street cleaning
+    description: The app applies the street cleaning rules of each M section.
+    requirements:
+    - {id: FR-02.02.001, p: Must, v: T, st: Implemented, src: R1, text: "The app shall not allow parking in an M section during its street cleaning hours."}
+    - {id: FR-02.02.002, p: Must, v: T, st: Implemented, src: C1, text: "The app shall apply the weekday, the start time and the end time of each street cleaning rule."}
+    - {id: FR-02.02.003, p: Must, v: T, st: Implemented, src: C1, text: "The app shall apply a street cleaning rule only in the week type of the rule: odd weeks, even weeks or every week."}
+    - {id: FR-02.02.004, p: Must, v: T, st: Implemented, src: C1, text: "The app shall use ISO 8601 week numbers to find the week type."}
+    - {id: FR-02.02.005, p: Must, v: T, st: Implemented, src: C1, text: "The app shall apply a street cleaning rule only in its season, for example from 15 March to 30 April."}
+    - {id: FR-02.02.006, p: Should, v: T, st: Implemented, src: C1, text: "If the cleaning data has no rule for an M section, the app shall read the rule from the sign text in the parking data."}
+    - {id: FR-02.02.007, p: Must, v: T, st: Implemented, src: C1, text: "If an M section has no street cleaning rule, the app shall show 'No cleaning registered'."}
+  - id: FE-02.03
+    title: 14-day limit
+    description: A car can stay in the same place for 14 days at most.
+    requirements:
+    - {id: FR-02.03.001, p: Must, v: T, st: Implemented, src: R1, text: "The app shall not allow one stay in the same place for more than 14 days."}
+  - id: FE-02.04
+    title: Next change
+    description: The app finds when parking becomes allowed or stops being allowed.
+    requirements:
+    - {id: FR-02.04.001, p: Must, v: T, st: Implemented, src: D1, text: "The app shall calculate the next change of the parking status in steps of 15 minutes."}
+    - {id: FR-02.04.002, p: Must, v: T, st: Implemented, src: D1, text: "The app shall look 15 days ahead for the next change."}
+
+- id: EP-03
+  title: Start time and stay check
+  goal: The user checks one moment or a full stay, now or in the future.
+  features:
+  - id: FE-03.01
+    title: Result for one moment
+    description: The app shows if the user can park at the start time, and for how long.
+    requirements:
+    - {id: FR-03.01.001, p: Must, v: T, st: Implemented, src: U2, text: "The app shall show if the permit allows parking at the start time."}
+    - {id: FR-03.01.002, p: Must, v: T, st: Implemented, src: U2, text: "If the permit allows parking, the app shall show when the permit stops allowing parking, and the reason."}
+    - {id: FR-03.01.003, p: Must, v: T, st: Implemented, src: U2, text: "If the permit does not allow parking, the app shall show when parking becomes allowed, and the reason."}
+    - {id: FR-03.01.004, p: Should, v: T, st: Implemented, src: D1, text: "The app shall show the time to the next change in days, hours and minutes."}
+    - {id: FR-03.01.005, p: Should, v: T, st: Implemented, src: U4, text: "For a date that is not today or tomorrow, the app shall show the weekday, the date, the week number and the week type."}
+  - id: FE-03.02
+    title: Start time
+    description: The user can check the current time or a different time.
+    requirements:
+    - {id: FR-03.02.001, p: Must, v: T, st: Implemented, src: D1, text: "The app shall use the current time as the start time when the app starts."}
+    - {id: FR-03.02.002, p: Must, v: T, st: Implemented, src: U6, text: "The app shall let the user select a different start date and start time."}
+    - {id: FR-03.02.003, p: Must, v: T, st: Implemented, src: U6, text: "The Now button shall set the start time to the current time."}
+    - {id: FR-03.02.004, p: Must, v: T, st: Implemented, src: U6, text: "The app shall use the word 'now' only when the start time is the current time."}
+    - {id: FR-03.02.005, p: Must, v: T, st: Implemented, src: U6, text: "When the user selects a start time, the app shall use the words 'at the start time' and show that time."}
+    - {id: FR-03.02.006, p: Must, v: T, st: Implemented, src: U6, text: "The words 'today' and 'tomorrow' shall always refer to the current date, not to the start date."}
+    - {id: FR-03.02.007, p: Should, v: T, st: Implemented, src: D1, text: "When the start time is the current time, the app shall calculate the result again every minute."}
+  - id: FE-03.03
+    title: Until time
+    description: The user enters an end time. The app checks the full stay.
+    requirements:
+    - {id: FR-03.03.001, p: Must, v: T, st: Implemented, src: U7, text: "The app shall let the user enter an until time. The until time is optional."}
+    - {id: FR-03.03.002, p: Must, v: T, st: Implemented, src: U7, text: "If the until time is empty, the app shall check only the start time."}
+    - {id: FR-03.03.003, p: Must, v: T, st: Implemented, src: U7, text: "If the until time is not later than the start time, the app shall show an error message."}
+    - {id: FR-03.03.004, p: Must, v: T, st: Implemented, src: U7, text: "If the permit allows parking for the full stay, the app shall show 'Your whole stay is allowed' and the latest possible end time."}
+    - {id: FR-03.03.005, p: Must, v: T, st: Implemented, src: U7, text: "If the permit does not allow parking for the full stay, the app shall show when to move the car, and the reason."}
+    - {id: FR-03.03.006, p: Should, v: T, st: Implemented, src: U7, text: "After a break, the app shall show when the permit allows parking again."}
+    - {id: FR-03.03.007, p: Should, v: T, st: Implemented, src: U7, text: "The Clear button shall delete the until time."}
+
+- id: EP-04
+  title: Week and cleaning awareness
+  goal: The user always knows the week type, and sees street cleaning before it starts.
+  features:
+  - id: FE-04.01
+    title: Week banner
+    description: The top of the app shows the week number and the week type.
+    requirements:
+    - {id: FR-04.01.001, p: Must, v: T, st: Implemented, src: U4, text: "The app shall show the current ISO week number at the top of the screen."}
+    - {id: FR-04.01.002, p: Must, v: T, st: Implemented, src: U4, text: "The app shall show the word 'Odd' or 'Even' for the current week."}
+    - {id: FR-04.01.003, p: Should, v: T, st: Implemented, src: U4, text: "The app shall show the number and the week type of the next week."}
+    - {id: FR-04.01.004, p: Could, v: T, st: Implemented, src: D1, text: "The app shall show the current weekday and date."}
+  - id: FE-04.02
+    title: Cleaning labels
+    description: Labels on the map and in the result show the street cleaning rules.
+    requirements:
+    - {id: FR-04.02.001, p: Must, v: I, st: Implemented, src: U6, text: "For street cleaning at the start time or in the next 7 days, the app shall show a red label. The label shall have yellow text and a warning triangle."}
+    - {id: FR-04.02.002, p: Must, v: T, st: Implemented, src: U6, text: "The red label shall start with 'No parking' and show the weekday, the hours, the week type and the next date."}
+    - {id: FR-04.02.003, p: Must, v: T, st: Implemented, src: U6, text: "During street cleaning, the red label shall show the end time of the street cleaning."}
+    - {id: FR-04.02.004, p: Must, v: I, st: Implemented, src: U6, text: "For a street cleaning rule that does not apply in the next 7 days, the app shall show a white label with a dashed border."}
+    - {id: FR-04.02.005, p: Must, v: T, st: Implemented, src: U6, text: "The white label shall show the next date of street cleaning, or the words 'out of season'."}
+    - {id: FR-04.02.006, p: Must, v: T, st: Implemented, src: U4, text: "Each street cleaning label shall show the week type: 'odd wks', 'even wks' or 'every week'."}
+    - {id: FR-04.02.007, p: Should, v: T, st: Implemented, src: U6, text: "Each street cleaning label shall show the season when the rule does not apply all year."}
+    - {id: FR-04.02.008, p: Should, v: I, st: Implemented, src: U6, text: "The result card shall use the same two label types as the map."}
+
+- id: EP-05
+  title: Map
+  goal: The user sees the parking sections around the address on a real street map.
+  features:
+  - id: FE-05.01
+    title: Street layout
+    description: The map shows the real streets around the address, to scale.
+    requirements:
+    - {id: FR-05.01.001, p: Must, v: I, st: Implemented, src: U5, text: "The app shall show a map of the streets around the address, to scale, with north at the top."}
+    - {id: FR-05.01.002, p: Must, v: I, st: Implemented, src: U5, text: "The map shall show the street names."}
+    - {id: FR-05.01.003, p: Should, v: I, st: Implemented, src: D1, text: "The map shall show a scale bar that changes with the zoom level."}
+    - {id: FR-05.01.004, p: Must, v: I, st: Implemented, src: U6, text: "The map shall show the address as a dot with the house number. The legend shall call the dot 'Parking place'."}
+  - id: FE-05.02
+    title: Parking sections on the map
+    description: The map shows each M section in its real position, coloured for the start time.
+    requirements:
+    - {id: FR-05.02.001, p: Must, v: I, st: Implemented, src: U5, text: "The map shall show each M section in its real position."}
+    - {id: FR-05.02.002, p: Must, v: T, st: Implemented, src: U6, text: "The map shall show M sections that allow parking at the start time as solid blue lines."}
+    - {id: FR-05.02.003, p: Must, v: T, st: Implemented, src: U6, text: "The map shall show M sections that do not allow parking at the start time as solid red lines."}
+    - {id: FR-05.02.004, p: Should, v: I, st: Implemented, src: U5, text: "The map shall show other parking as grey dotted lines. Other parking is paid parking, loading zones, motorcycle parking and disabled parking."}
+    - {id: FR-05.02.005, p: Should, v: I, st: Implemented, src: D1, text: "The map shall show the M section that the result uses with a black outline."}
+  - id: FE-05.03
+    title: Map labels
+    description: Labels on the map give the rules of each section.
+    requirements:
+    - {id: FR-05.03.001, p: Must, v: I, st: Implemented, src: U4, text: "At the first zoom level, the map shall show one label for each different rule on the street of the address."}
+    - {id: FR-05.03.002, p: Should, v: I, st: Implemented, src: U5, text: "When the user zooms in, the map shall show a label for each M section in view."}
+    - {id: FR-05.03.003, p: Must, v: I, st: Implemented, src: D1, text: "A label shall not cover another label, the address dot, the scale bar or the zoom buttons."}
+    - {id: FR-05.03.004, p: Must, v: I, st: Implemented, src: D1, text: "On a narrow screen, the map shall show a long label on two lines."}
+    - {id: FR-05.03.005, p: Could, v: I, st: Implemented, src: U5, text: "At a high zoom level, the map shall label other parking with its type and the words 'not valid'."}
+    - {id: FR-05.03.006, p: Must, v: I, st: Implemented, src: D1, text: "Each label shall have a line to its parking section."}
+  - id: FE-05.04
+    title: Zoom and move
+    description: The user changes the area that the map shows.
+    requirements:
+    - {id: FR-05.04.001, p: Must, v: T, st: Implemented, src: U5, text: "The app shall let the user zoom the map with two fingers, with the mouse wheel and with the + and − buttons."}
+    - {id: FR-05.04.002, p: Must, v: T, st: Implemented, src: U5, text: "The app shall let the user move the map with one finger or with the mouse."}
+    - {id: FR-05.04.003, p: Should, v: T, st: Implemented, src: U6, text: "The ◎ button shall move the map back to the parking place."}
+  - id: FE-05.05
+    title: Legend
+    description: The legend explains every symbol on the map.
+    requirements:
+    - {id: FR-05.05.001, p: Must, v: I, st: Implemented, src: U6, text: "The app shall show a legend below the map for each line type, dot and label type."}
+    - {id: FR-05.05.002, p: Must, v: I, st: Implemented, src: U6, text: "The legend shall use the words 'allowed at start time' and 'not allowed at start time'."}
+
+- id: EP-06
+  title: Longest stays nearby
+  goal: The user finds M sections near the address where the car can stay longest.
+  features:
+  - id: FE-06.01
+    title: Suggestion list
+    description: A ranked list of M sections near the address, with the stay length as a bar.
+    requirements:
+    - {id: FR-06.01.001, p: Must, v: T, st: Implemented, src: U7, text: "The app shall list the M sections within 500 metres where the permit allows parking at the start time."}
+    - {id: FR-06.01.002, p: Must, v: T, st: Implemented, src: U7, text: "The app shall sort the list by the longest stay without a break first, then by distance."}
+    - {id: FR-06.01.003, p: Should, v: T, st: Implemented, src: D1, text: "The app shall show 7 suggestions or fewer."}
+    - {id: FR-06.01.004, p: Should, v: T, st: Implemented, src: D1, text: "The app shall show M sections on one street with the same rules and the same stay as one suggestion."}
+    - {id: FR-06.01.005, p: Must, v: T, st: Implemented, src: U7, text: "Each suggestion shall show the street, the house numbers, the stay length, the sign, the end time, the reason and the distance."}
+    - {id: FR-06.01.006, p: Must, v: I, st: Implemented, src: U7, text: "Each suggestion shall show the stay length as a horizontal bar. A full bar is 14 days."}
+    - {id: FR-06.01.007, p: Should, v: T, st: Implemented, src: U7, text: "If the user entered an until time, each suggestion shall show if it covers the full stay."}
+  - id: FE-06.02
+    title: Show a suggestion on the map
+    description: The user taps a suggestion to see where it is.
+    requirements:
+    - {id: FR-06.02.001, p: Must, v: T, st: Implemented, src: U7, text: "When the user taps a suggestion, the map shall move to the suggestion and show it with a black and white outline."}
+    - {id: FR-06.02.002, p: Should, v: T, st: Implemented, src: U7, text: "When the user taps a suggestion, the app shall scroll to the map."}
+
+- id: EP-07
+  title: Location
+  goal: The user checks the place where the user stands, without typing.
+  features:
+  - id: FE-07.01
+    title: Use my location
+    description: The app fills in the nearest address from the position of the device.
+    requirements:
+    - {id: FR-07.01.001, p: Must, v: T, st: "Implemented, not verified on device", src: U8, text: "The app shall fill in the address from the position of the device when the user taps 'Use my location'."}
+    - {id: FR-07.01.002, p: Must, v: T, st: Implemented, src: D1, text: "The app shall use the nearest address on an M-zone street that is 150 metres or less from the position."}
+    - {id: FR-07.01.003, p: Should, v: T, st: Implemented, src: D1, text: "The app shall show the distance to that address and the accuracy of the position."}
+    - {id: FR-07.01.004, p: Must, v: T, st: Implemented, src: D1, text: "If no M-zone address is 150 metres or less from the position, the app shall tell the user."}
+    - {id: FR-07.01.005, p: Must, v: T, st: Implemented, src: D1, text: "If the user refuses location access, the app shall tell the user where to allow it."}
+
+- id: EP-08
+  title: My car and payment
+  goal: The app follows the parked car. When the free time ends, the app helps the user to pay or tells the user to move.
+  features:
+  - id: FE-08.01
+    title: Park the car
+    description: The user saves the place of the car.
+    requirements:
+    - {id: FR-08.01.001, p: Must, v: T, st: Implemented, src: U9, text: "When the permit is valid at the address, the app shall show an 'I parked here' button."}
+    - {id: FR-08.01.002, p: Must, v: T, st: Implemented, src: U9, text: "When the user taps 'I parked here', the app shall save the M section, the address and the time on the device."}
+    - {id: FR-08.01.003, p: Must, v: T, st: Implemented, src: U9, text: "The app shall show a 'My car' card below the week banner while the app has a saved car."}
+    - {id: FR-08.01.004, p: Must, v: T, st: Implemented, src: U9, text: "The 'I moved the car' button shall delete the saved car and its reminders."}
+  - id: FE-08.02
+    title: Pay or move
+    description: The card shows the free time and what to do when the free time ends.
+    requirements:
+    - {id: FR-08.02.001, p: Must, v: T, st: Implemented, src: U9, text: "The card shall show when the free time ends."}
+    - {id: FR-08.02.002, p: Must, v: T, st: Implemented, src: U9, text: "The card shall show the next step when the free time ends: pay or move the car."}
+    - {id: FR-08.02.003, p: Must, v: T, st: Implemented, src: U9, text: "The app shall offer payment only if the city data shows paid parking in the same M section."}
+    - {id: FR-08.02.004, p: Must, v: T, st: Implemented, src: R1, text: "The app shall not offer payment for street cleaning. The card shall tell the user to move the car."}
+    - {id: FR-08.02.005, p: Must, v: T, st: Implemented, src: R1, text: "The app shall not offer payment after the 14-day limit. The card shall tell the user to move the car."}
+    - {id: FR-08.02.006, p: Must, v: T, st: Implemented, src: C1, text: "The app shall limit the paid time to the maximum parking time of the paid parking."}
+    - {id: FR-08.02.007, p: Must, v: T, st: Implemented, src: C1, text: "The card shall show the taxa, the price text and the maximum parking time from the city data."}
+    - {id: FR-08.02.008, p: Must, v: T, st: Implemented, src: U9, text: "The card shall show when the user can stop the payment, and the reason."}
+    - {id: FR-08.02.009, p: Should, v: T, st: Implemented, src: D1, text: "The card shall show an estimated cost at the city price, and tell the user that the payment app can add a fee."}
+  - id: FE-08.03
+    title: Pay with the Parkering Göteborg app
+    description: The app opens the payment app of the user.
+    requirements:
+    - {id: FR-08.03.001, p: Must, v: T, st: "Implemented, not verified on device", src: U9, text: "The 'Open Parkering Göteborg' button shall open the Parkering Göteborg app."}
+    - {id: FR-08.03.002, p: Should, v: T, st: "Implemented, not verified on device", src: D1, text: "If the Parkering Göteborg app is not installed, the button shall open the app store page of the Parkering Göteborg app."}
+    - {id: FR-08.03.003, p: Must, v: I, st: Implemented, src: D1, text: "The app shall not make a payment. The user shall approve each payment in the Parkering Göteborg app or in the SMS app."}
+  - id: FE-08.04
+    title: Pay by SMS
+    description: The app prepares an SMS to Parkering Göteborg. The user sends it.
+    requirements:
+    - {id: FR-08.04.001, p: Must, v: T, st: "Implemented, not verified on device", src: U9, text: "The 'Pay by SMS' button shall open the SMS app with the number 72 430 and the platskod as the message."}
+    - {id: FR-08.04.002, p: Must, v: T, st: Implemented, src: P2, text: "The app shall find the platskod from the taxa. Example: Taxa 1 has platskod 801."}
+    - {id: FR-08.04.003, p: Must, v: T, st: Implemented, src: P1, text: "The app shall tell the user to compare the platskod with the platskod on the sign."}
+    - {id: FR-08.04.004, p: Must, v: T, st: Implemented, src: P1, text: "The app shall tell the user that SMS parking needs a Parkering Göteborg account, and that Parkering Göteborg sends an invoice."}
+    - {id: FR-08.04.005, p: Must, v: T, st: "Implemented, not verified on device", src: P1, text: "The 'Stop SMS parking' button shall open the SMS app with the number 72 430 and the message 'avsluta'."}
+  - id: FE-08.05
+    title: Reminders
+    description: The Android app sends reminders before and when the free time ends.
+    requirements:
+    - {id: FR-08.05.001, p: Must, v: T, st: "Implemented, not verified on device", src: U9, text: "The Android app shall send a reminder 15 minutes before the free time ends."}
+    - {id: FR-08.05.002, p: Must, v: T, st: "Implemented, not verified on device", src: U9, text: "The Android app shall send a reminder when the free time ends."}
+    - {id: FR-08.05.003, p: Must, v: T, st: "Implemented, not verified on device", src: U9, text: "A reminder for paid parking shall have two buttons: 'Open Parkering Göteborg' and 'Pay by SMS'."}
+    - {id: FR-08.05.004, p: Should, v: T, st: "Implemented, not verified on device", src: D1, text: "The Android app shall send a reminder to stop the payment when the permit allows free parking again."}
+    - {id: FR-08.05.005, p: Should, v: T, st: "Implemented, not verified on device", src: R1, text: "The Android app shall send a reminder 1 hour before the 14-day limit."}
+    - {id: FR-08.05.006, p: Must, v: T, st: "Implemented, not verified on device", src: D1, text: "The Android app shall ask for permission to send notifications when the user taps 'I parked here'."}
+    - {id: FR-08.05.007, p: Must, v: T, st: "Implemented, not verified on device", src: D1, text: "The Android app shall calculate and schedule the reminders again each time the user opens the app."}
+    - {id: FR-08.05.008, p: Must, v: T, st: Implemented, src: D1, text: "The web app shall tell the user that reminders work only in the Android app."}
+
+- id: EP-09
+  title: Data pipeline
+  goal: The street data in the app is correct and stays up to date without manual work.
+  features:
+  - id: FE-09.01
+    title: City data
+    description: The pipeline downloads parking and street cleaning data from Göteborgs Stad.
+    requirements:
+    - {id: FR-09.01.001, p: Must, v: I, st: Implemented, src: C1, text: "The pipeline shall download the residential parking sections from the open WFS service of Göteborgs Stad."}
+    - {id: FR-09.01.002, p: Must, v: I, st: Implemented, src: C1, text: "The pipeline shall download the street cleaning rules from the same service."}
+    - {id: FR-09.01.003, p: Should, v: I, st: Implemented, src: C1, text: "The pipeline shall download the paid, time-limited, loading, motorcycle, disabled and private parking layers near the M zone."}
+    - {id: FR-09.01.004, p: Must, v: T, st: Implemented, src: U8, text: "The pipeline shall keep only the residential parking sections with zone letter M."}
+    - {id: FR-09.01.005, p: Must, v: T, st: Implemented, src: C1, text: "The pipeline shall convert the coordinates from SWEREF 99 12 00 (EPSG:3007) to WGS 84."}
+  - id: FE-09.02
+    title: Address and street data
+    description: The pipeline downloads house numbers and streets from OpenStreetMap.
+    requirements:
+    - {id: FR-09.02.001, p: Must, v: I, st: Implemented, src: O1, text: "The pipeline shall download the house numbers of each M-zone street from OpenStreetMap."}
+    - {id: FR-09.02.002, p: Must, v: I, st: Implemented, src: O1, text: "The pipeline shall download the street network around the M zone from OpenStreetMap."}
+    - {id: FR-09.02.003, p: Should, v: T, st: Implemented, src: D1, text: "The pipeline shall split an address with two numbers, for example '3,5', into two addresses."}
+  - id: FE-09.03
+    title: Matching
+    description: The pipeline joins the rules from different layers to each M section.
+    requirements:
+    - {id: FR-09.03.001, p: Must, v: T, st: Implemented, src: D1, text: "The pipeline shall attach to each M section the street cleaning rules on the same street that are 4 metres or less from it."}
+    - {id: FR-09.03.002, p: Should, v: T, st: Implemented, src: D1, text: "The pipeline shall use street cleaning rules with the same regulation number before other street cleaning rules."}
+    - {id: FR-09.03.003, p: Must, v: T, st: Implemented, src: U9, text: "The pipeline shall attach to each M section the paid parking on the same street that is 4 metres or less from it."}
+    - {id: FR-09.03.004, p: Must, v: T, st: Implemented, src: U9, text: "For paid parking, the pipeline shall keep the taxa, the price text, the maximum parking time and the platskod."}
+  - id: FE-09.04
+    title: Schedule and publication
+    description: GitHub Actions runs the pipeline and publishes the result.
+    requirements:
+    - {id: FR-09.04.001, p: Must, v: I, st: Implemented, src: U8, text: "The pipeline shall download the city data every Monday."}
+    - {id: FR-09.04.002, p: Should, v: I, st: Implemented, src: D1, text: "The pipeline shall download the OpenStreetMap data on the first Monday of each month."}
+    - {id: FR-09.04.003, p: Should, v: D, st: Implemented, src: D1, text: "The pipeline shall let a maintainer start a refresh by hand, with an option to download the OpenStreetMap data."}
+    - {id: FR-09.04.004, p: Must, v: T, st: Implemented, src: D1, text: "The pipeline shall stop and not publish if the data has fewer than 300 M sections, 1000 addresses or 1000 street lines."}
+    - {id: FR-09.04.005, p: Should, v: I, st: Implemented, src: D1, text: "The pipeline shall publish new data only when the data changed."}
+    - {id: FR-09.04.006, p: Must, v: T, st: Implemented, src: D1, text: "The pipeline shall write the download date into the data file."}
+  - id: FE-09.05
+    title: Data in the app
+    description: The app loads the newest data that it can get.
+    requirements:
+    - {id: FR-09.05.001, p: Should, v: T, st: Implemented, src: D1, text: "The app shall show the data date and the number of M sections and streets at the bottom of the screen."}
+    - {id: FR-09.05.002, p: Must, v: T, st: "Implemented, not verified on device", src: U8, text: "When the Android app is online, it shall download newer data from the web app."}
+    - {id: FR-09.05.003, p: Must, v: T, st: "Implemented, not verified on device", src: U8, text: "When the Android app is offline, it shall use the newest data that it saved."}
+
+- id: EP-10
+  title: Distribution
+  goal: The user installs and updates the app without a store account or a developer account.
+  features:
+  - id: FE-10.01
+    title: Web app
+    description: The app is a website that the user can add to the home screen.
+    requirements:
+    - {id: FR-10.01.001, p: Must, v: D, st: Implemented, src: U8, text: "The web app shall be available on a public HTTPS address without a login."}
+    - {id: FR-10.01.002, p: Must, v: D, st: Implemented, src: U8, text: "The user shall be able to add the web app to the home screen of an Android phone from Chrome."}
+    - {id: FR-10.01.003, p: Should, v: T, st: Implemented, src: U8, text: "The web app shall start without a network after the first visit, with the last data that it loaded."}
+    - {id: FR-10.01.004, p: Must, v: T, st: Implemented, src: D1, text: "The web app shall load the street data from the network before it uses the saved copy."}
+  - id: FE-10.02
+    title: Android app
+    description: GitHub Actions builds the APK and publishes it as a release.
+    requirements:
+    - {id: FR-10.02.001, p: Must, v: I, st: Implemented, src: U8, text: "A workflow shall build an Android APK when the app code, the icons or the Android settings change."}
+    - {id: FR-10.02.002, p: Must, v: I, st: Implemented, src: U8, text: "The workflow shall publish each APK as a numbered release with installation notes."}
+    - {id: FR-10.02.003, p: Must, v: T, st: Implemented, src: D1, text: "The APK shall contain the street data, so that the app works at the first start without a network."}
+    - {id: FR-10.02.004, p: Could, v: I, st: Implemented, src: D1, text: "The APK shall not contain the sales deck."}
+    - {id: FR-10.02.005, p: Should, v: I, st: Implemented, src: D1, text: "The Android app shall use the app icon and the start screen of M4 Parking Check, not the default Capacitor images."}
+
+nfr:
+
+- category: ACC
+  name: Accessibility and colour vision
+  requirements:
+  - {id: NFR-ACC-001, p: Must, v: I, st: Implemented, src: U3, text: "The app shall not use red and green as a pair to show a difference."}
+  - {id: NFR-ACC-002, p: Must, v: I, st: Implemented, src: U3, text: "Each colour that shows a meaning shall also have a second sign: a word, an icon, a stripe, a dash or a dot."}
+  - {id: NFR-ACC-003, p: Should, v: A, st: Open, src: U3, text: "Text shall have a contrast ratio of 4.5:1 or more against its background, as in WCAG 2.2 level AA."}
+  - {id: NFR-ACC-004, p: Should, v: I, st: Implemented, src: D1, text: "The app shall follow the light or dark setting of the device."}
+  - {id: NFR-ACC-005, p: Should, v: I, st: Implemented, src: D1, text: "Map text shall be 11 pixels or larger on a screen that is 340 pixels wide."}
+  - {id: NFR-ACC-006, p: Should, v: I, st: Implemented, src: D1, text: "Each button and input shall show a visible frame when it has the keyboard focus."}
+
+- category: USE
+  name: Usability and wording
+  requirements:
+  - {id: NFR-USE-001, p: Must, v: I, st: Implemented, src: D1, text: "The app shall use English for all text, and the Swedish names for streets and signs."}
+  - {id: NFR-USE-002, p: Must, v: I, st: Implemented, src: D1, text: "The app shall show times in the 24-hour format."}
+  - {id: NFR-USE-003, p: Should, v: I, st: Implemented, src: U2, text: "The result shall give a yes or no answer before the details."}
+
+- category: PERF
+  name: Performance
+  requirements:
+  - {id: NFR-PERF-001, p: Should, v: T, st: Open, src: D1, text: "The app shall show the result 1 second or less after the user taps Check, on a mid-range phone."}
+  - {id: NFR-PERF-002, p: Should, v: I, st: Implemented, src: D1, text: "The street data file shall be smaller than 1 MB."}
+  - {id: NFR-PERF-003, p: Should, v: D, st: Open, src: D1, text: "The map shall follow the finger without a visible delay when the user zooms or moves it."}
+
+- category: "OFF"
+  name: Offline use
+  requirements:
+  - {id: NFR-OFF-001, p: Must, v: T, st: Implemented, src: U8, text: "After the first start, the app shall check addresses without a network connection."}
+  - {id: NFR-OFF-002, p: Could, v: I, st: Implemented, src: D1, text: "Without a network, the app shall use the fonts of the device."}
+
+- category: PRIV
+  name: Privacy
+  requirements:
+  - {id: NFR-PRIV-001, p: Must, v: I, st: Implemented, src: D1, text: "The app shall keep addresses and the saved car only on the device."}
+  - {id: NFR-PRIV-002, p: Must, v: I, st: Implemented, src: D1, text: "The app shall not need a user account."}
+  - {id: NFR-PRIV-003, p: Must, v: I, st: Implemented, src: D1, text: "The app shall not send the position of the device to a server."}
+  - {id: NFR-PRIV-004, p: Must, v: I, st: Implemented, src: D1, text: "The app shall not use tracking or analytics."}
+
+- category: SEC
+  name: Security
+  requirements:
+  - {id: NFR-SEC-001, p: Must, v: I, st: Implemented, src: U8, text: "The repository shall not contain passwords, API keys, access tokens or signing keys."}
+  - {id: NFR-SEC-002, p: Must, v: I, st: Implemented, src: U9, text: "The app shall not handle payment card data or make payments."}
+  - {id: NFR-SEC-003, p: Must, v: I, st: Implemented, src: U8, text: "A workflow shall use only the temporary token that GitHub gives to each run."}
+  - {id: NFR-SEC-004, p: Should, v: I, st: Open, src: D1, text: "If the project uses a permanent signing key, the key shall be stored in GitHub Secrets."}
+
+- category: DATA
+  name: Data quality
+  requirements:
+  - {id: NFR-DATA-001, p: Must, v: I, st: Implemented, src: C1, text: "The app shall take the parking rules only from the open data of Göteborgs Stad."}
+  - {id: NFR-DATA-002, p: Should, v: I, st: Implemented, src: U8, text: "After a successful weekly refresh, the city data shall be 7 days old or less."}
+  - {id: NFR-DATA-003, p: Must, v: I, st: Implemented, src: R1, text: "The app shall tell the user that temporary bans are not in the data, and that the signs on the street apply."}
+  - {id: NFR-DATA-004, p: Should, v: A, st: Open, src: P2, text: "The project shall compare the platskod list with an official Parkering Göteborg source."}
+
+- category: COMP
+  name: Compatibility
+  requirements:
+  - {id: NFR-COMP-001, p: Must, v: T, st: "Implemented, not verified on device", src: U8, text: "The Android app shall run on Android 5.1 (API level 22) or later."}
+  - {id: NFR-COMP-002, p: Should, v: T, st: Open, src: D1, text: "The web app shall work in the current versions of Chrome, Firefox, Safari and Edge."}
+  - {id: NFR-COMP-003, p: Must, v: T, st: Implemented, src: D1, text: "The layout shall work on screens that are 340 pixels wide or wider, without horizontal scrolling."}
+
+- category: MNT
+  name: Maintainability
+  requirements:
+  - {id: NFR-MNT-001, p: Must, v: I, st: Implemented, src: U8, text: "The repository shall contain all source code, scripts, workflows and this specification."}
+  - {id: NFR-MNT-002, p: Must, v: I, st: Implemented, src: U8, text: "The data refresh shall run without manual steps."}
+  - {id: NFR-MNT-003, p: Should, v: I, st: Implemented, src: D1, text: "The pipeline scripts shall run with Python 3.12 and the pyproj library."}
+
+- category: LEG
+  name: Licences and credits
+  requirements:
+  - {id: NFR-LEG-001, p: Must, v: I, st: Implemented, src: O1, text: "The app shall credit the OpenStreetMap contributors and name the ODbL licence."}
+  - {id: NFR-LEG-002, p: Must, v: I, st: Implemented, src: C1, text: "The app shall credit Göteborgs Stad as the source of the parking data."}
+  - {id: NFR-LEG-003, p: Should, v: I, st: Implemented, src: D1, text: "The app shall use the name Parkering Göteborg only to name the payment app, and not use its logo."}
+
+- category: VER
+  name: Versions
+  requirements:
+  - {id: NFR-VER-001, p: Must, v: I, st: Implemented, src: U10, text: "Each change shall make a new version. A change shall not overwrite an earlier version."}
+  - {id: NFR-VER-002, p: Must, v: I, st: Implemented, src: D1, text: "Each APK shall have a higher version number than the APK before it."}
+  - {id: NFR-VER-003, p: Should, v: I, st: Implemented, src: U10, text: "Before a large change, the project shall keep the earlier state on a named branch."}
+  - {id: NFR-VER-004, p: Must, v: I, st: Implemented, src: U10, text: "Each release of the specification and the test matrix shall be a new file with the version number in the file name."}
