@@ -1,0 +1,103 @@
+# Design system content: meaning, use and behaviour of each element.
+# Measured values (sizes, colours, fonts) come from docs/spec/design/v<version>/ds.json,
+# which spec/screens/ds-capture.js reads from the running app.
+
+intro: >-
+  The design system names every visual element of the app. New features must use these elements.
+  Each element has an ID. The images and the values come from the running app, in light and dark mode.
+  Values in px are CSS pixels at a phone width of 412 px.
+
+colours:
+  # token: [ID, name, use, rules]
+  "--ink":      [DS-COL-01, Ink, "Main text, borders of strong elements, the parking place dot.", "Use for all body text."]
+  "--muted":    [DS-COL-02, Muted text, "Secondary text, labels, hints.", "Do not use for text that the user must read to decide."]
+  "--bg":       [DS-COL-03, Background, "Page background, input fields.", ""]
+  "--surface":  [DS-COL-04, Surface, "Cards and sections.", ""]
+  "--line":     [DS-COL-05, Line, "Card borders, dividers, borders of secondary buttons.", ""]
+  "--sign":     [DS-COL-06, Action blue, "Primary buttons, pay button, focus ring, focused input border.", "Use only for actions and focus."]
+  "--ok":       [DS-COL-07, Allowed blue, "Allowed state: verdict card border and mark, map lines, suggestion bars.", "Always together with the word 'park' or 'allowed'."]
+  "--ok-soft":  [DS-COL-08, Allowed tint, "Fill of the allowed verdict card.", ""]
+  "--no":       [DS-COL-09, Not-allowed orange, "Not-allowed verdict card border and mark.", "Always together with the diagonal stripes and the mark ✕."]
+  "--no-soft":  [DS-COL-10, Not-allowed tint, "Stripes of the not-allowed card.", ""]
+  "--stop":     [DS-COL-11, Map red, "Map lines of M sections where parking is not allowed at the start time.", "Use only on the map. Never pair with green."]
+  "--ban-bg":   [DS-COL-12, Warning red, "Background of street cleaning warnings (soon).", "Always with --ban-fg text and the warning triangle."]
+  "--ban-fg":   [DS-COL-13, Warning yellow, "Text and triangle on --ban-bg.", ""]
+  "--road":     [DS-COL-14, Street, "Minor streets on the map.", ""]
+  "--road-major": [DS-COL-15, Main street, "Main streets on the map.", ""]
+  "--other":    [DS-COL-16, Other parking grey, "Dotted map lines of parking where the permit is not valid.", ""]
+  "--halo":     [DS-COL-17, Halo, "Outline behind map text, so that text stays readable on lines.", ""]
+  "--pin":      [DS-COL-18, Parking place, "The address dot on the map.", ""]
+
+type:
+  - [DS-TYP-01, Display XL, "Overpass 900, 35.2 px (2.2rem), line 1", "Week number."]
+  - [DS-TYP-02, Display L, "Overpass 900, 25.6 px (1.6rem), line 1.1", "Verdict on a card: You may park now."]
+  - [DS-TYP-03, Display M, "Overpass 900, 22.4 px (1.4rem)", "App title."]
+  - [DS-TYP-04, Title, "Overpass 900, 20 px (1.25rem), line 1.15", "Card titles: Permit valid here, the address on My car."]
+  - [DS-TYP-05, Body, "Overpass 400, 16 px, line 1.45", "Running text."]
+  - [DS-TYP-06, Detail, "Overpass 400–800, 14.7 px (0.92rem)", "Lines under a verdict, key–value lists."]
+  - [DS-TYP-07, Small, "Overpass 400–700, 13.1 px (0.82rem)", "Hints, legend, suggestion details."]
+  - [DS-TYP-08, Section heading, "Overpass 800, 12.5 px (0.78rem), upper case, letter spacing 0.08 em, muted", "Headings of sections: LONGEST STAYS NEARBY."]
+  - [DS-TYP-09, Mono label, "Overpass Mono 700–800, 11–15 px", "Codes, durations, map labels, cleaning badges, permit chip. Numbers use tabular figures."]
+
+spacing:
+  - [DS-SPC-01, Side gutter, "16 px, plus the safe area of the phone", "Left and right of all content."]
+  - [DS-SPC-02, Section gap, "16 px", "Between sections, between cards in a result."]
+  - [DS-SPC-03, Card padding, "16 px (sections), 14 px (verdict cards)", ""]
+  - [DS-SPC-04, Control gap, "8–10 px", "Between buttons and fields in one row."]
+  - [DS-SPC-05, Corner radius, "12 px sections · 10 px cards and primary buttons · 8 px fields and secondary buttons · 4–5 px labels and badges · 999 px pills", ""]
+  - [DS-SPC-06, Content width, "600 px maximum", "The app is one column on every screen."]
+  - [DS-SPC-07, Touch target, "40 px or more in height", "Every button and field. The zoom buttons are 40 × 40 px."]
+
+icons:
+  - [DS-ICN-01, "✓", "Permit valid", "In a 40 px mark square."]
+  - [DS-ICN-02, "P", "You may park", ""]
+  - [DS-ICN-03, "✕", "Not valid or not allowed", ""]
+  - [DS-ICN-04, "↔", "Across the street", ""]
+  - [DS-ICN-05, "?", "House number not found", ""]
+  - [DS-ICN-06, "kr", "Pay now or move", ""]
+  - [DS-ICN-07, "⚠", "Street cleaning", "Filled red triangle with yellow mark (soon), outline triangle (later)."]
+  - [DS-ICN-08, "⌖", "Use my location", ""]
+  - [DS-ICN-09, "◎", "Back to the parking place", ""]
+  - [DS-ICN-10, "+ −", "Zoom in, zoom out", ""]
+
+components:
+  DS-CMP-01: {use: "Top of the screen. App name and permit chip.", behaviour: "Not interactive."}
+  DS-CMP-02: {use: "One section card per region of the screen (IA-01).", behaviour: "Not interactive. A section is hidden when its region has no content."}
+  DS-CMP-03: {use: "Week number and week type at the top of the screen.", behaviour: "Not interactive. Updates every minute. The pill is filled for odd weeks and outlined for even weeks, so the week type does not depend on colour."}
+  DS-CMP-04: {use: "Heading of a section.", behaviour: "Not interactive."}
+  DS-CMP-05: {use: "Street and Number fields. Label above the field.", behaviour: "Tap: the field gets a blue border and the keyboard opens. Street suggests M-zone street names while the user types. Empty field + Check: the app shows 'Enter both a street and a number.' below the form."}
+  DS-CMP-06: {use: "Check. One primary button per region.", behaviour: "Tap: the app checks the address and shows the result in R5. Empty fields: the app shows an error and keeps the old result."}
+  DS-CMP-07: {use: "Now, Clear, I moved the car.", behaviour: "Now: sets the start time to the current time. Clear: deletes the until time. I moved the car: deletes the saved car and its reminders."}
+  DS-CMP-08: {use: "Answer that parking is allowed.", behaviour: "Not interactive."}
+  DS-CMP-09: {use: "Answer that parking is not allowed, or that the user must pay or move.", behaviour: "Not interactive. Stripes and the mark ✕ show the state without colour."}
+  DS-CMP-10: {use: "Extra information that changes the answer, for example the M section across the street.", behaviour: "Not interactive. Dashed border."}
+  DS-CMP-11: {use: "Details under a verdict: sign, street cleaning, spaces, also here.", behaviour: "Not interactive."}
+  DS-CMP-12: {use: "Street cleaning now or in the next 7 days.", behaviour: "Not interactive. The same badge appears on the map as a label."}
+  DS-CMP-13: {use: "Street cleaning that does not apply in the next 7 days.", behaviour: "Not interactive."}
+  DS-CMP-14: {use: "One suggestion in Longest stays nearby.", behaviour: "Tap: the app scrolls to the map, moves the map to the section and outlines it. The row keeps a dark border while it is selected (aria-pressed)."}
+  DS-CMP-15: {use: "Explains the map symbols below the map.", behaviour: "Not interactive."}
+  DS-CMP-16: {use: "Notes and hints: corrected street name, estimated position, reminders note.", behaviour: "Not interactive."}
+  DS-CMP-17: {use: "Top of the My car card.", behaviour: "I moved the car: deletes the car. No confirmation, because the user can save the car again with one tap."}
+  DS-CMP-18: {use: "Actions that leave the app: Open Parkering Göteborg, Pay by SMS, Stop SMS parking.", behaviour: "Shown only when the section has paid parking. Open Parkering Göteborg: opens the app, or its store page if it is not installed. Pay by SMS: opens the SMS app with the platskod. The user must tap Send."}
+  DS-CMP-19: {use: "Map with streets, sections, labels, parking place and zoom buttons.", behaviour: "One finger or mouse: move. Two fingers, mouse wheel, + and −: zoom from 0.5× to 9×. ◎: back to the parking place. Labels appear by zoom level (IA-09)."}
+  DS-CMP-20: {name: "Date and time field", use: "Start time and Until.", behaviour: "Tap: the system date and time picker opens. A change runs the check again at once."}
+  DS-CMP-21: {name: "Map zoom button", use: "+, − and ◎ on the map.", behaviour: "Tap: zoom by 1.5×, or return to the parking place. At the zoom limit the button stays active and has no effect (see DS-DEBT-04)."}
+  DS-CMP-22: {name: "Location button", use: "Use my location.", behaviour: "Tap: the app asks for the position. The text next to the button shows 'Finding your position…', then the address, the distance and the accuracy, or a message if location is refused or not near an M-zone street."}
+
+state_rules:
+  # The rule for each interaction state. "In app" says if the app has it today.
+  - [DS-STA-01, Default, "The element as defined in its component.", "Yes"]
+  - [DS-STA-02, Hover (mouse only), "Primary: background 10 % darker. Secondary and rows: border in Ink. Cursor: pointer.", "Rows only"]
+  - [DS-STA-03, Keyboard focus, "3 px outline in Action blue, 2 px offset. Fields: border in Action blue.", "Yes"]
+  - [DS-STA-04, Pressed, "Background 15 % darker, or border in Ink, for 100 ms or while pressed.", "Rows only"]
+  - [DS-STA-05, Selected, "Border in Ink and a 1 px inner line. aria-pressed=true.", "Rows only"]
+  - [DS-STA-06, Disabled, "Avoid. Hide an action that is not available, or show why it is not available. If a disabled state is necessary: opacity 45 %, cursor not-allowed, no hover, and a text that gives the reason.", "No"]
+  - [DS-STA-07, Error, "A message in Not-allowed orange, bold, below the form. It says what is wrong and how to fix it.", "Yes"]
+  - [DS-STA-08, Busy, "The text next to the control says what the app does, for example 'Finding your position…'.", "Location only"]
+
+debt:
+  - [DS-DEBT-01, "Buttons have no hover and no pressed style (DS-STA-02, DS-STA-04).", "Add the styles to .go, .ghost, .paybtn and the zoom buttons."]
+  - [DS-DEBT-02, "The app has no own disabled style. A disabled field looks the same as an active field.", "Apply DS-STA-06 if a feature needs a disabled control."]
+  - [DS-DEBT-03, "The not-allowed verdict card is orange with stripes. Map lines for the same state are red.", "Decide one colour for 'not allowed' and use it in both places."]
+  - [DS-DEBT-04, "The zoom buttons stay active at the zoom limits.", "Show the limit, for example with DS-STA-06 and a short text."]
+  - [DS-DEBT-05, "Contrast ratios are not measured (NFR-ACC-003).", "Measure every text and token pair in light and dark mode."]

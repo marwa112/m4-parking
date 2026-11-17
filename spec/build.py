@@ -23,11 +23,9 @@ LINT = ROOT / "spec" / "tools" / "ste-lint" / "ste-lint.py"
 PRIO = ["Must", "Should", "Could", "Won't"]
 VERIFY = {"T": "Test", "D": "Demonstration", "I": "Inspection", "A": "Analysis"}
 STATUS_MARK = {"Implemented": "✓", "Implemented, not verified on device": "◐", "Partly": "◑", "Open": "○", "Withdrawn": "–"}
-PLANNED = [  # later chapters of the plan, shown in the TOC so the reviewer sees the full structure
-    ("Architecture", "Context, components, data flow, deployment."),
-    ("Technical specification", "Data model, rules engine, geometry matching, map labels, Android shell."),
-    ("Data pipeline", "Sources, scripts, matching, schedule, sanity checks, manual refresh."),
-    ("Solution design", "Design decisions (ADR) and their reasons."),
+PLANNED = [  # later chapters of the plan, shown so the reviewer sees the full structure
+    ("Technical specification", "Algorithms in detail: geometry matching, label placement, Android shell."),
+    ("Data pipeline", "Each script step, fields used, sanity checks, manual refresh."),
     ("Known limits and risks", "Impact and mitigation for each limit."),
     ("Installation guides", "IG-01 web app, IG-02 Android app, IG-03 developer setup."),
     ("User guide", "Task-based steps, with screens."),
@@ -103,6 +101,192 @@ def ste_check(d):
 
 # ---------- HTML ----------
 E = html.escape
+# ---------- assets: screens, diagrams, design system, chapters ----------
+import markdown as _md
+
+ASSETS = {}
+
+def load_assets(d):
+    a = d.get("assets", {})
+    base = OUT_DIR
+    def j(sub, ver, name):
+        f = base / sub / f"v{ver}" / name
+        return json.loads(f.read_text(encoding="utf-8")) if f.exists() else None
+    ASSETS["screens_ver"] = a.get("screens")
+    ASSETS["screens"] = (j("screens", a["screens"], "manifest.json") or {}).get("screens", []) if a.get("screens") else []
+    ASSETS["diag_dir"] = base / "diagrams" / f"v{a.get('diagrams')}"
+    ASSETS["design_ver"] = a.get("design")
+    ASSETS["ds"] = j("design", a["design"], "ds.json") if a.get("design") else None
+    ASSETS["design"] = yaml.safe_load((ROOT / "spec" / "design.yaml").read_text(encoding="utf-8"))
+    ASSETS["chapters"] = {p.stem: p.read_text(encoding="utf-8") for p in sorted((ROOT / "spec" / "chapters").glob("*.md"))}
+    missing = [n for n in ("screens", "ds") if not ASSETS[n]]
+    if missing or not ASSETS["diag_dir"].exists():
+        die("missing assets: " + ", ".join(missing + ([] if ASSETS["diag_dir"].exists() else ["diagrams"])))
+
+def frlink(i):
+    return f'<a class="mono" href="#{i}">{i}</a>'
+
+def screens_html(fid):
+    seq = [s for s in ASSETS["screens"] if s["fe"] == fid]
+    if not seq:
+        return '<p class="screens">No user screens. See the chapters Architecture and Data pipeline.</p>'
+    cards = []
+    for s in seq:
+        dots = "".join(f'<span class="mk" style="left:{m["x"]}%;top:{m["y"]}%" aria-hidden="true">{m["n"]}</span>' for m in s["marks"])
+        legend = "".join(f'<li><span class="mk inl">{m["n"]}</span> {E(m["text"])}</li>' for m in s["marks"])
+        mock = '<span class="mock">Mock-up</span>' if s.get("mock") else ""
+        cards.append(
+            f'<figure class="sc" id="{s["id"]}"><div class="shot"><img loading="lazy" src="screens/v{ASSETS["screens_ver"]}/{s["file"]}" '
+            f'alt="{E(s["title"])}" width="{s["w"]}" height="{s["h"]}">{dots}</div>'
+            f'<figcaption><div class="scid"><a href="#{s["id"]}">{s["id"]}</a> {mock}</div><b>{E(s["title"])}</b>'
+            f'<p>{E(s["caption"])}</p>{"<ol class=mkl>" + legend + "</ol>" if legend else ""}'
+            f'<p class="frs">Shows: {", ".join(frlink(i) for i in s["frs"])}</p></figcaption></figure>')
+    return '<div class="seq">' + "".join(cards) + "</div>"
+
+def figure_html(name, caption):
+    f = ASSETS["diag_dir"] / f"{name}.svg"
+    if not f.exists():
+        die(f"diagram {name} not found in {ASSETS['diag_dir']}")
+    svg = f.read_text(encoding="utf-8")
+    return (f'<figure class="diag" id="fig-{name}"><div class="dw">{svg}</div>'
+            f'<figcaption>{E(caption)} <a href="diagrams/v{ASSETS["diag_dir"].name[1:]}/{name}.svg">Open SVG</a> · source <code>spec/diagrams/{name}.mmd</code></figcaption></figure>')
+
+def chapter_html(key, h, numprefix):
+    """Markdown chapter -> HTML. '## ID Title {#ID}' become numbered level-2 headings."""
+    text = ASSETS["chapters"][key]
+    figs = {}
+    def keep(m):
+        k = f"FIGURE{len(figs)}X"
+        figs[k] = figure_html(m.group(1), m.group(2))
+        return "\n\n" + k + "\n\n"
+    text = re.sub(r'\[\[figure ([\w-]+) "([^"]+)"\]\]', keep, text)
+    out = _md.markdown(text, extensions=["tables", "attr_list"])
+    for k, v in figs.items():
+        out = out.replace(f"<p>{k}</p>", v)
+    n = [0]
+    def head(m):
+        n[0] += 1
+        anchor, title = m.group(1), re.sub("<[^>]+>", "", m.group(2))
+        return h(2, f"{numprefix}.{n[0]}", title, anchor)
+    out = re.sub(r'<h2 id="([^"]+)">(.*?)</h2>', head, out)
+    out = out.replace("<table>", '<div class="tw"><table class="plain">').replace("</table>", "</table></div>")
+    return out
+
+_RGB = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)")
+def hexify(v):
+    def f(m):
+        a = m.group(4)
+        hx = "#%02x%02x%02x" % tuple(int(m.group(i)) for i in (1, 2, 3))
+        if a is not None and float(a) < 1:
+            return hx + f" {round(float(a) * 100)}%"
+        return hx
+    return _RGB.sub(f, v or "")
+
+def sw(c):
+    c = (c or "").strip()
+    return f'<span class="swatch" style="background:{E(c)}"></span><code>{E(c)}</code>' if c else "–"
+
+def ds_html(h, sec):
+    D, ds = ASSETS["design"], ASSETS["ds"]
+    ver = ASSETS["design_ver"]
+    tok_l, tok_d = ds["tokens"]["light"], ds["tokens"]["dark"]
+    out = [f'<p>{E(D["intro"])}</p>']
+    # colours
+    out.append(h(2, f"{sec}.1", "Colours (DS-COL)", "ds-colours"))
+    rows = "".join(f'<tr id="{v[0]}"><td class="mono">{v[0]}</td><td><b>{E(v[1])}</b><br><code>{E(k)}</code></td><td>{sw(tok_l.get(k))}</td><td>{sw(tok_d.get(k))}</td><td>{E(v[2])}{("<br><i>" + E(v[3]) + "</i>") if v[3] else ""}</td></tr>' for k, v in D["colours"].items())
+    out.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>Token</th><th>Light</th><th>Dark</th><th>Use and rule</th></tr></thead><tbody>' + rows + "</tbody></table></div>")
+    # type
+    out.append(h(2, f"{sec}.2", "Typography (DS-TYP)", "ds-type"))
+    def spec_style(spec):
+        fam = "var(--f-app-mono)" if "Mono" in spec else "var(--f-app)"
+        wt = re.search(r"\b([1-9]00)\b", spec); sz = re.search(r"([\d.]+) px", spec)
+        return f"font-family:{fam};font-weight:{wt.group(1) if wt else 400};font-size:{min(float(sz.group(1)) if sz else 16, 36)}px;" + ("text-transform:uppercase;letter-spacing:.08em;" if "upper" in spec else "")
+    rows = "".join(f'<tr id="{t[0]}"><td class="mono">{t[0]}</td><td><span style="{spec_style(t[2])}">{E(t[1])}</span></td><td>{E(t[2])}</td><td>{E(t[3])}</td></tr>' for t in D["type"])
+    out.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>Sample</th><th>Font</th><th>Use</th></tr></thead><tbody>' + rows + "</tbody></table></div>")
+    # spacing, icons
+    out.append(h(2, f"{sec}.3", "Spacing, shape and size (DS-SPC)", "ds-spacing"))
+    out.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>Name</th><th>Value</th><th>Where</th></tr></thead><tbody>' + "".join(f'<tr id="{t[0]}"><td class="mono">{t[0]}</td><td>{E(t[1])}</td><td>{E(t[2])}</td><td>{E(t[3])}</td></tr>' for t in D["spacing"]) + "</tbody></table></div>")
+    out.append(h(2, f"{sec}.4", "Icons and marks (DS-ICN)", "ds-icons"))
+    out.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>Mark</th><th>Meaning</th><th>Note</th></tr></thead><tbody>' + "".join(f'<tr id="{t[0]}"><td class="mono">{t[0]}</td><td class="icn">{E(t[1])}</td><td>{E(t[2])}</td><td>{E(t[3])}</td></tr>' for t in D["icons"]) + "</tbody></table></div>")
+    # components
+    out.append(h(2, f"{sec}.5", "Components (DS-CMP)", "ds-components"))
+    out.append('<p>Each card shows the element from the app in light and dark mode, with numbered parts. The inspect panel gives the measured values. Colours are given as light / dark.</p>')
+    meta = D["components"]
+    for el in ds["elements"]:
+        L, Dk = el["light"], el["dark"]
+        if not L:
+            continue
+        pad = L.get("pad", 6); rw = float(L["root"]["width"][:-2]); rh = float(L["root"]["height"][:-2])
+        dots = ""
+        for i, p in enumerate(L["parts"], 1):
+            if p.get("missing"):
+                continue
+            x = (pad + p["box"][0] / 100 * rw) / (rw + 2 * pad) * 100
+            y = (pad + (p["box"][1] + p["box"][3] / 2) / 100 * rh) / (rh + 2 * pad) * 100
+            dots += f'<span class="mk" style="left:{x:.1f}%;top:{y:.1f}%">{i}</span>'
+        r = L["root"]
+        root_rows = [("Size", f'{r["width"]} × {r["height"]}'), ("Padding", r["padding"]), ("Corner radius", r["borderRadius"]),
+                     ("Border", hexify(r["border"])), ("Fill", hexify(r["backgroundColor"]) + " / " + hexify(Dk["root"]["backgroundColor"] if Dk else "")),
+                     ("Shadow", r["boxShadow"] if r["boxShadow"] != "none" else "")]
+        if r.get("backgroundImage", "none") != "none":
+            root_rows.append(("Pattern", "diagonal stripes"))
+        rr = "".join(f"<tr><th>{k}</th><td>{E(v)}</td></tr>" for k, v in root_rows if v and v.strip() not in ("0px", "none", "/"))
+        prow = ""
+        for i, p in enumerate(L["parts"], 1):
+            if p.get("missing"):
+                continue
+            dp = (Dk["parts"][i - 1] if Dk and i - 1 < len(Dk["parts"]) else {}) or {}
+            fam = p["fontFamily"].split(",")[0].strip('"')
+            font = f'{fam} {p["fontWeight"]}, {p["fontSize"]}/{p["lineHeight"]}' + (f', {p["letterSpacing"]}' if p["letterSpacing"] not in ("normal", "0px") else "") + (", upper case" if p["textTransform"] == "uppercase" else "")
+            prow += (f'<tr><td><span class="mk inl">{i}</span></td><td><b>{E(p["label"])}</b><br><span class="muted">{p["width"]} × {p["height"]} · at {p["offset"][0]}, {p["offset"][1]}</span></td>'
+                     f'<td>{E(font)}</td><td>{sw(hexify(p["color"]))} / {sw(hexify(dp.get("color", "")))}</td>'
+                     f'<td>{sw(hexify(p["backgroundColor"])) if "0%" not in hexify(p["backgroundColor"]) else "–"}</td></tr>')
+        m = meta.get(el["id"], {})
+        dark_img = f'<img loading="lazy" src="design/v{ver}/{el["id"]}-dark.png" alt="{E(el["name"])}, dark mode">' if Dk else ""
+        out.append(
+            f'<section class="cmp" id="{el["id"]}"><h4><span class="num">{el["id"]}</span> {E(el["name"])}</h4><div class="cmpg">'
+            f'<div class="cmpi"><div class="shot ds"><img loading="lazy" src="design/v{ver}/{el["id"]}.png" alt="{E(el["name"])}">{dots}</div>'
+            f'<div class="darkimg">{dark_img}<span class="muted">Dark mode</span></div></div>'
+            f'<div class="insp"><table class="kvs">{rr}</table>'
+            f'<div class="tw"><table class="plain parts"><thead><tr><th></th><th>Part</th><th>Font</th><th>Text light / dark</th><th>Fill</th></tr></thead><tbody>{prow}</tbody></table></div>'
+            f'<p><b>Use.</b> {E(m.get("use", ""))}</p><p><b>Behaviour.</b> {E(m.get("behaviour", ""))}</p></div></div></section>')
+    # extra components that exist only as states
+    for st in ds.get("states", []):
+        if not any(e["id"] == st["id"] for e in ds["elements"]):
+            m = meta.get(st["id"], {})
+            out.append(f'<section class="cmp" id="{st["id"]}"><h4><span class="num">{st["id"]}</span> {E(m.get("name") or st.get("name") or "")}</h4>'
+                       f'<p><b>Use.</b> {E(m.get("use", ""))}</p><p><b>Behaviour.</b> {E(m.get("behaviour", ""))}</p><p class="muted">States: see {sec}.6.</p></section>')
+    # states
+    out.append(h(2, f"{sec}.6", "Interaction states (DS-STA)", "ds-states"))
+    out.append('<p>These rules apply to every interactive element. The column "In app" says if the app has the state today. The strips below are captures from the app. A state that the app does not style looks the same as Default.</p>')
+    out.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>State</th><th>Rule</th><th>In app</th></tr></thead><tbody>' + "".join(f'<tr id="{t[0]}"><td class="mono">{t[0]}</td><td><b>{E(t[1])}</b></td><td>{E(t[2])}</td><td>{E(t[3])}</td></tr>' for t in D["state_rules"]) + "</tbody></table></div>")
+    names = {e["id"]: e["name"] for e in ds["elements"]}
+    for st in ds.get("states", []):
+        nm = names.get(st["id"]) or meta.get(st["id"], {}).get("name") or st.get("name") or ""
+        cells = ""
+        base = st["states"][0]["css"] if st["states"] else {}
+        for s in st["states"]:
+            diff = [f"{k}: {hexify(v)}" for k, v in s["css"].items() if v != base.get(k) and k in ("backgroundColor", "borderColor", "outline", "opacity", "cursor", "transform", "boxShadow")]
+            same = s["state"] != "default" and not diff
+            cells += (f'<figure class="stc{" same" if same else ""}"><img loading="lazy" src="design/v{ver}/{s["file"]}" alt="{E(nm)}, {s["state"]}">'
+                      f'<figcaption><b>{s["state"].capitalize()}</b><br>{E("; ".join(diff)) if diff else ("No own style" if same else "Base style")}{(" · " + E(s["note"])) if s.get("note") else ""}</figcaption></figure>')
+        out.append(f'<div class="strip"><h5><a class="mono" href="#{st["id"]}">{st["id"]}</a> {E(nm)}</h5><div class="stg">{cells}</div></div>')
+    # debt
+    out.append(h(2, f"{sec}.7", "Design debt (DS-DEBT)", "ds-debt"))
+    out.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>Gap</th><th>Fix</th></tr></thead><tbody>' + "".join(f'<tr id="{t[0]}"><td class="mono">{t[0]}</td><td>{E(t[1])}</td><td>{E(t[2])}</td></tr>' for t in D["debt"]) + "</tbody></table></div>")
+    return "\n".join(out)
+
+def ids_from_assets():
+    g = collections.OrderedDict()
+    g["Screens (SC)"] = [(s["id"], s["title"]) for s in ASSETS["screens"]]
+    for key, label in (("04-information-architecture", "Information architecture (IA)"), ("06-architecture", "Architecture (AR)"), ("07-solution-design", "Solution design (AR, ADR)")):
+        g[label] = [(m.group(1), m.group(2)) for m in re.finditer(r"^## (\S+) (.+?) \{#\1\}", ASSETS["chapters"][key], re.M)]
+    D = ASSETS["design"]
+    g["Design system (DS)"] = [(v[0], v[1]) for v in D["colours"].values()] + [(t[0], t[1]) for t in D["type"] + D["spacing"] + D["icons"]] + \
+        [(e["id"], e["name"]) for e in ASSETS["ds"]["elements"]] + [(k, v.get("name", "")) for k, v in D["components"].items() if not any(e["id"] == k for e in ASSETS["ds"]["elements"])] + \
+        [(t[0], t[1]) for t in D["state_rules"]] + [(t[0], t[1][:40]) for t in D["debt"]]
+    return g
+
 
 def prio_badge(p):
     return f'<span class="prio p-{p.lower().replace(chr(39), "")}" title="Priority: {p}">{p}</span>'
@@ -139,7 +323,7 @@ def build(d, lint_summary):
     body.append(h(1, f"{sec}", "Introduction", "intro"))
     body.append(h(2, f"{sec}.1", "Purpose and scope", "purpose"))
     body.append('<p>This document specifies M4 Parking Check. The app tells a holder of an M4 residential parking permit in Göteborg where and when the permit allows parking. '
-                'This draft contains the requirements catalogue for review. The later chapters follow in version 1.0.</p>')
+                'This draft contains the requirements, the screens, the information architecture, the design system, the architecture and the solution design, for review.</p>')
     body.append(h(2, f"{sec}.2", "How to read the IDs", "ids"))
     body.append('<div class="tw"><table class="plain"><thead><tr><th>Item</th><th>Format</th><th>Example</th></tr></thead><tbody>'
                 '<tr><td>Epic</td><td class="mono">EP-nn</td><td class="mono">EP-08</td></tr>'
@@ -178,8 +362,10 @@ def build(d, lint_summary):
         for fi, f in enumerate(e["features"], 1):
             body.append(h(3, f"{sec}.{ei}.{fi}", f'{f["id"]} {f["title"]}', f["id"]))
             body.append(f'<p>{E(f["description"])}</p>')
-            body.append('<p class="screens">Screens: <i>sequence SC-' + f["id"][3:] + '-1 … follows in version 1.0.</i></p>')
+            if f.get("use"):
+                body.append(f'<div class="use"><b>Intended use</b><p>{E(f["use"])}</p></div>')
             body.append(req_table(f["requirements"], d))
+            body.append('<h5 class="seqh">Screens</h5>' + screens_html(f["id"]))
 
     # 3 Non-functional
     sec += 1
@@ -188,7 +374,14 @@ def build(d, lint_summary):
         body.append(h(2, f"{sec}.{ci}", f'NFR-{c["category"]} {c["name"]}', f'nfr-{c["category"]}'))
         body.append(req_table(c["requirements"], d))
 
-    # 4 Review points
+    # Information architecture, design system, architecture, solution design
+    for key, title, anchor in (("04-information-architecture", "Information architecture", "ia"), (None, "Design system", "ds"),
+                               ("06-architecture", "Architecture", "architecture"), ("07-solution-design", "Solution design", "solution")):
+        sec += 1
+        body.append(h(1, f"{sec}", title, anchor))
+        body.append(ds_html(h, sec) if key is None else chapter_html(key, h, sec))
+
+    # Review points
     sec += 1
     body.append(h(1, f"{sec}", "Points for review", "review"))
     openr = [r for r in reqs if r["st"] != "Implemented"]
@@ -196,7 +389,7 @@ def build(d, lint_summary):
     body.append('<div class="tw"><table class="plain"><thead><tr><th>ID</th><th>Status</th><th>Requirement</th></tr></thead><tbody>' +
                 "".join(f'<tr><td class="mono"><a href="#{r["id"]}">{r["id"]}</a></td><td>{status_cell(r["st"])}</td><td>{E(r["text"])}</td></tr>' for r in openr) + "</tbody></table></div>")
 
-    # 5 Planned chapters
+    # Planned chapters
     sec += 1
     body.append(h(1, f"{sec}", "Chapters in version 1.0", "planned"))
     body.append('<ol class="planned">' + "".join(f"<li><b>{E(t)}.</b> {E(x)}</li>" for t, x in PLANNED) + "</ol>")
@@ -228,6 +421,7 @@ def build(d, lint_summary):
         groups.setdefault(f'{e["id"]} {e["title"]}', []).extend([(e["id"], e["title"])] + [(f["id"], f["title"]) for f in e["features"]] + [(r["id"], "") for f in e["features"] for r in f["requirements"]])
     for c in d["nfr"]:
         groups.setdefault(f'NFR-{c["category"]} {c["name"]}', []).extend([(r["id"], "") for r in c["requirements"]])
+    groups.update(ids_from_assets())
     body.append('<div class="idx">' + "".join(f'<div><h4>{E(g)}</h4><p>' + " ".join(f'<a class="mono" href="#{i}" title="{E(t)}">{i}</a>' for i, t in lst) + "</p></div>" for g, lst in groups.items()) + "</div>")
 
     toc_html = "".join(f'<li class="l{lv}"><a href="#{a}"><span class="num">{n}</span> {E(t)}</a></li>' for lv, n, t, a in toc if lv <= 2)
@@ -243,10 +437,10 @@ TEMPLATE = """<!doctype html>
 <title>M4 Parking Check Specification v{ver}</title>
 <meta name="description" content="Requirements specification for M4 Parking Check, version {ver}.">
 <link rel="icon" href="../icons/icon-192.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Overpass:wght@400;600;800;900&family=Overpass+Mono:wght@500;700&display=swap">
 <style>
 /* Layout: sticky table of contents on the left (top on phones), one reading column. App blue as accent. Priority and status use shape and text, not colour alone. */
-:root{{--bg:#f7f8fa;--paper:#fff;--ink:#121a24;--muted:#4b5767;--line:#d3d9e1;--accent:#0b5cad;--soft:#e8f0fa;--f-body:"IBM Plex Sans",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,monospace}}
+:root{{--f-app:"Overpass",system-ui,sans-serif;--f-app-mono:"Overpass Mono",ui-monospace,monospace;--bg:#f7f8fa;--paper:#fff;--ink:#121a24;--muted:#4b5767;--line:#d3d9e1;--accent:#0b5cad;--soft:#e8f0fa;--f-body:"IBM Plex Sans",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,monospace}}
 @media (prefers-color-scheme: dark){{:root:not([data-theme="light"]){{--bg:#0d1218;--paper:#151c25;--ink:#eef2f7;--muted:#a9b5c4;--line:#2d3947;--accent:#79b4ff;--soft:#13263d;color-scheme:dark}}}}
 :root[data-theme="dark"]{{--bg:#0d1218;--paper:#151c25;--ink:#eef2f7;--muted:#a9b5c4;--line:#2d3947;--accent:#79b4ff;--soft:#13263d;color-scheme:dark}}
 *{{box-sizing:border-box}}
@@ -303,6 +497,39 @@ ol.planned li{{margin:4px 0}}
 footer{{margin-top:60px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:14px}}
 :focus-visible{{outline:3px solid var(--accent);outline-offset:2px}}
 @media (max-width:900px){{.wrap{{grid-template-columns:1fr}} nav.toc{{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:20px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}} main{{padding:24px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}} header.doc h1{{font-size:1.8rem}} nav.toc li.l2{{display:none}}}}
+/* screens, figures, design system */
+.use{{border-left:0;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}} .use p{{margin:.3em 0 0}}
+h5{{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}}
+.seq{{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin:6px 0 28px}}
+figure{{margin:0}}
+.sc{{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;scroll-margin-top:16px}}
+.sc:target{{outline:3px solid var(--accent)}}
+.shot{{position:relative;line-height:0;background:#e9ecf0}} .shot img{{width:100%;height:auto;display:block}}
+.sc .shot{{max-height:520px;overflow:hidden}}
+.mk{{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#ef7e0d;color:#1d1d1d;border:2px solid #121a24;font:700 13px/20px var(--f-mono);text-align:center;box-shadow:0 0 0 2px #fff}}
+.mk.inl{{position:static;display:inline-block;transform:none;width:20px;height:20px;font-size:11px;line-height:16px;vertical-align:-3px;box-shadow:none}}
+.sc figcaption{{padding:10px 12px 12px;font-size:.88rem}} .sc figcaption p{{margin:.3em 0}}
+.scid{{font:600 .8rem var(--f-mono);margin-bottom:2px}} .scid a{{text-decoration:none}}
+.mock{{display:inline-block;border:2px dashed var(--ink);border-radius:4px;padding:0 6px;font:700 .7rem var(--f-mono);text-transform:uppercase;margin-left:4px}}
+ol.mkl{{list-style:none;padding:0;margin:.4em 0}} ol.mkl li{{margin:2px 0}}
+.frs{{color:var(--muted)}}
+.diag{{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:12px 0 22px}}
+.diag .dw{{overflow-x:auto}} .diag svg{{max-width:100%;height:auto;display:block;margin:0 auto}}
+.diag figcaption{{color:#3f4b5a;font-size:.86rem;margin-top:8px}} .diag figcaption a{{color:#0b5cad}}
+.swatch{{display:inline-block;width:18px;height:18px;border-radius:4px;border:1px solid var(--line);vertical-align:-4px;margin-right:6px}}
+td.icn{{font:800 1.3rem var(--f-app)}}
+.cmp{{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:14px;margin:14px 0;scroll-margin-top:16px}}
+.cmp h4{{margin:0 0 10px}}
+.cmpg{{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px;align-items:start}}
+.shot.ds{{background:repeating-conic-gradient(#eef1f4 0 25%,#fff 0 50%) 0 0/16px 16px;border:1px solid var(--line);border-radius:6px}}
+.darkimg{{margin-top:8px;font-size:.8rem}} .darkimg img{{max-width:100%;display:block;border:1px solid var(--line);border-radius:6px;margin-bottom:2px}}
+table.kvs{{border-collapse:collapse;font-size:.86rem;margin-bottom:8px}} table.kvs th{{text-transform:none;letter-spacing:0;font-size:.82rem;padding:3px 12px 3px 0;border:0;color:var(--muted)}} table.kvs td{{padding:3px 0;border:0;font-family:var(--f-mono);font-size:.82rem}}
+table.parts td{{font-size:.84rem}}
+.strip{{margin:16px 0}} .stg{{display:flex;flex-wrap:wrap;gap:12px}}
+.stc{{width:200px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px}} .stc img{{max-width:100%;display:block;margin-bottom:6px}}
+.stc figcaption{{font-size:.76rem;line-height:1.35;word-break:break-word}} .stc.same{{border-style:dashed}}
+@media (max-width:760px){{.cmpg{{grid-template-columns:minmax(0,1fr)}}}}
+.cmpg>*{{min-width:0}} table.kvs td{{word-break:break-word}} td.mono{{white-space:nowrap}}
 @media (max-width:640px){{table.req thead{{display:none}} table.req,table.req tbody,table.req tr,table.req td{{display:block;width:100%}} table.req tr{{border-bottom:1px solid var(--line);padding:10px 12px}} table.req tr:last-child{{border-bottom:0}} table.req td{{border:0;padding:2px 0}} table.req td.txt{{min-width:0;margin:4px 0 8px}} table.req td:nth-child(n+3){{display:inline-block;width:auto;margin-right:12px;font-size:.84rem;color:var(--muted)}}}}
 @media print{{nav.toc{{display:none}} .wrap{{display:block}} main{{padding:0}} .tw{{overflow:visible;border:0}} h2{{break-before:page}}}}
 </style>
@@ -327,6 +554,13 @@ footer{{margin-top:60px;color:var(--muted);font-size:.85rem;border-top:1px solid
 def main():
     d = load()
     validate(d)
+    load_assets(d)
+    uses = [re.sub(r"'[^']*'", "TEXT", f["use"]) for e in d["epics"] for f in e["features"] if f.get("use")]
+    with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as fh:
+        fh.write("\n\n".join(uses)); tmpu = fh.name
+    ru = json.loads(subprocess.run([sys.executable, str(LINT), "--json", "--disable", "synonym-rotation", tmpu], capture_output=True, text=True).stdout or "{}")
+    if ru.get("hard_count"):
+        die("ASD-STE100 check failed on intended use: " + "; ".join(v["message"] for v in ru["violations"] if v.get("level") != "advisory"))
     hard, found, words = ste_check(d)
     if hard:
         die("ASD-STE100 check failed:\n  " + "\n  ".join(f"{i}: {rule}: {m}" for i, rule, m in found))

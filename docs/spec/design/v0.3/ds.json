@@ -1,0 +1,4530 @@
+{
+ "version": "0.3",
+ "elements": [
+  {
+   "id": "DS-CMP-01",
+   "name": "Header",
+   "file": "DS-CMP-01.png",
+   "light": {
+    "root": {
+     "width": "380px",
+     "height": "32px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Title",
+      "sel": "h1",
+      "width": "191px",
+      "height": "32px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "32.48px",
+      "letterSpacing": "-0.224px",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       50.25,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Permit chip",
+      "sel": ".permit",
+      "width": "95px",
+      "height": "27px",
+      "padding": "3px 8px",
+      "border": "2px solid rgb(13, 21, 32)",
+      "borderRadius": "6px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       74.9,
+       8.42,
+       25.1,
+       83.12
+      ],
+      "offset": [
+       285,
+       3
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "380px",
+     "height": "32px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Title",
+      "sel": "h1",
+      "width": "191px",
+      "height": "32px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "32.48px",
+      "letterSpacing": "-0.224px",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       50.25,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Permit chip",
+      "sel": ".permit",
+      "width": "95px",
+      "height": "27px",
+      "padding": "3px 8px",
+      "border": "2px solid rgb(243, 246, 250)",
+      "borderRadius": "6px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       74.9,
+       8.42,
+       25.1,
+       83.12
+      ],
+      "offset": [
+       285,
+       3
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-02",
+   "name": "Section card",
+   "file": "DS-CMP-02.png",
+   "light": {
+    "root": {
+     "width": "380px",
+     "height": "104px",
+     "padding": "16px",
+     "border": "1px solid rgb(185, 195, 207)",
+     "borderRadius": "12px",
+     "backgroundColor": "rgb(255, 255, 255)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "section[aria-label=\"Week number\"]",
+      "width": "380px",
+      "height": "104px",
+      "padding": "16px",
+      "border": "1px solid rgb(185, 195, 207)",
+      "borderRadius": "12px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 0
+   },
+   "dark": {
+    "root": {
+     "width": "380px",
+     "height": "104px",
+     "padding": "16px",
+     "border": "1px solid rgb(58, 72, 88)",
+     "borderRadius": "12px",
+     "backgroundColor": "rgb(22, 30, 40)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "section[aria-label=\"Week number\"]",
+      "width": "380px",
+      "height": "104px",
+      "padding": "16px",
+      "border": "1px solid rgb(58, 72, 88)",
+      "borderRadius": "12px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 0
+   }
+  },
+  {
+   "id": "DS-CMP-03",
+   "name": "Week banner",
+   "file": "DS-CMP-03.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "70px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "14px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Week number",
+      "sel": "#wkNum",
+      "width": "142px",
+      "height": "35px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "35.2px",
+      "fontWeight": "900",
+      "lineHeight": "35.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0.56,
+       40.9,
+       50.5
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Odd week pill (filled)",
+      "sel": "#wkPill",
+      "width": "101px",
+      "height": "36px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(13, 21, 32)",
+      "borderRadius": "999px",
+      "backgroundColor": "rgb(13, 21, 32)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       44.94,
+       0,
+       29.33,
+       51.65
+      ],
+      "offset": [
+       156,
+       0
+      ]
+     },
+     {
+      "label": "Next week line",
+      "sel": "#wkNext",
+      "width": "346px",
+      "height": "20px",
+      "padding": "0px",
+      "border": "0px none rgb(63, 75, 90)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(63, 75, 90)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "400",
+      "lineHeight": "19.72px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       71.73,
+       100,
+       28.27
+      ],
+      "offset": [
+       0,
+       50
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "70px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "14px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Week number",
+      "sel": "#wkNum",
+      "width": "142px",
+      "height": "35px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "35.2px",
+      "fontWeight": "900",
+      "lineHeight": "35.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0.56,
+       40.9,
+       50.5
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Odd week pill (filled)",
+      "sel": "#wkPill",
+      "width": "101px",
+      "height": "36px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(243, 246, 250)",
+      "borderRadius": "999px",
+      "backgroundColor": "rgb(243, 246, 250)",
+      "backgroundImage": "none",
+      "color": "rgb(22, 30, 40)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       44.94,
+       0,
+       29.33,
+       51.65
+      ],
+      "offset": [
+       156,
+       0
+      ]
+     },
+     {
+      "label": "Next week line",
+      "sel": "#wkNext",
+      "width": "346px",
+      "height": "20px",
+      "padding": "0px",
+      "border": "0px none rgb(182, 194, 208)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(182, 194, 208)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "400",
+      "lineHeight": "19.72px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       71.73,
+       100,
+       28.27
+      ],
+      "offset": [
+       0,
+       50
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-04",
+   "name": "Section heading",
+   "file": "DS-CMP-04.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "18px",
+     "padding": "0px",
+     "border": "0px none rgb(63, 75, 90)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(63, 75, 90)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "12.48px",
+     "fontWeight": "800",
+     "lineHeight": "18.096px",
+     "letterSpacing": "0.9984px",
+     "textTransform": "uppercase",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Heading",
+      "sel": "#sugSec h2",
+      "width": "346px",
+      "height": "18px",
+      "padding": "0px",
+      "border": "0px none rgb(63, 75, 90)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(63, 75, 90)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "12.48px",
+      "fontWeight": "800",
+      "lineHeight": "18.096px",
+      "letterSpacing": "0.9984px",
+      "textTransform": "uppercase",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "18px",
+     "padding": "0px",
+     "border": "0px none rgb(182, 194, 208)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(182, 194, 208)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "12.48px",
+     "fontWeight": "800",
+     "lineHeight": "18.096px",
+     "letterSpacing": "0.9984px",
+     "textTransform": "uppercase",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Heading",
+      "sel": "#sugSec h2",
+      "width": "346px",
+      "height": "18px",
+      "padding": "0px",
+      "border": "0px none rgb(182, 194, 208)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(182, 194, 208)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "12.48px",
+      "fontWeight": "800",
+      "lineHeight": "18.096px",
+      "letterSpacing": "0.9984px",
+      "textTransform": "uppercase",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-05",
+   "name": "Text field with label",
+   "file": "DS-CMP-05.png",
+   "light": {
+    "root": {
+     "width": "240px",
+     "height": "66px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Label",
+      "sel": "#f > div:first-child label",
+      "width": "240px",
+      "height": "17px",
+      "padding": "0px",
+      "border": "0px none rgb(63, 75, 90)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(63, 75, 90)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "12px",
+      "fontWeight": "800",
+      "lineHeight": "17.4px",
+      "letterSpacing": "0.6px",
+      "textTransform": "uppercase",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       26.19
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Input",
+      "sel": "#street",
+      "width": "240px",
+      "height": "45px",
+      "padding": "10px",
+      "border": "2px solid rgb(185, 195, 207)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(242, 244, 247)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16.8px",
+      "fontWeight": "600",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       32.22,
+       100,
+       67.78
+      ],
+      "offset": [
+       0,
+       21
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "240px",
+     "height": "66px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Label",
+      "sel": "#f > div:first-child label",
+      "width": "240px",
+      "height": "17px",
+      "padding": "0px",
+      "border": "0px none rgb(182, 194, 208)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(182, 194, 208)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "12px",
+      "fontWeight": "800",
+      "lineHeight": "17.4px",
+      "letterSpacing": "0.6px",
+      "textTransform": "uppercase",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       26.19
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Input",
+      "sel": "#street",
+      "width": "240px",
+      "height": "45px",
+      "padding": "10px",
+      "border": "2px solid rgb(58, 72, 88)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(12, 17, 23)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16.8px",
+      "fontWeight": "600",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       32.22,
+       100,
+       67.78
+      ],
+      "offset": [
+       0,
+       21
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-06",
+   "name": "Primary button",
+   "file": "DS-CMP-06.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "47px",
+     "padding": "13px",
+     "border": "0px none rgb(255, 255, 255)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(11, 92, 173)",
+     "backgroundImage": "none",
+     "color": "rgb(255, 255, 255)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16.8px",
+     "fontWeight": "900",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Button",
+      "sel": ".go",
+      "width": "346px",
+      "height": "47px",
+      "padding": "13px",
+      "border": "0px none rgb(255, 255, 255)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(11, 92, 173)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16.8px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "47px",
+     "padding": "13px",
+     "border": "0px none rgb(255, 255, 255)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(59, 139, 224)",
+     "backgroundImage": "none",
+     "color": "rgb(255, 255, 255)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16.8px",
+     "fontWeight": "900",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Button",
+      "sel": ".go",
+      "width": "346px",
+      "height": "47px",
+      "padding": "13px",
+      "border": "0px none rgb(255, 255, 255)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(59, 139, 224)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16.8px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-07",
+   "name": "Secondary button",
+   "file": "DS-CMP-07.png",
+   "light": {
+    "root": {
+     "width": "56px",
+     "height": "33px",
+     "padding": "6px 12px",
+     "border": "2px solid rgb(185, 195, 207)",
+     "borderRadius": "8px",
+     "backgroundColor": "rgb(255, 255, 255)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "13.6px",
+     "fontWeight": "700",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Button",
+      "sel": "#nowBtn",
+      "width": "56px",
+      "height": "33px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(185, 195, 207)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "56px",
+     "height": "33px",
+     "padding": "6px 12px",
+     "border": "2px solid rgb(58, 72, 88)",
+     "borderRadius": "8px",
+     "backgroundColor": "rgb(22, 30, 40)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "13.6px",
+     "fontWeight": "700",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Button",
+      "sel": "#nowBtn",
+      "width": "56px",
+      "height": "33px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(58, 72, 88)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-08",
+   "name": "Verdict card: allowed",
+   "file": "DS-CMP-08.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "153px",
+     "padding": "14px",
+     "border": "2px solid rgb(11, 79, 153)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(220, 234, 250)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "#steps .step:nth-child(2)",
+      "width": "346px",
+      "height": "153px",
+      "padding": "14px",
+      "border": "2px solid rgb(11, 79, 153)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(220, 234, 250)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "12px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Mark",
+      "sel": "#steps .step:nth-child(2) .mark",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px",
+      "border": "0px none rgb(255, 255, 255)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(11, 79, 153)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       4.62,
+       10.43,
+       11.56,
+       26.07
+      ],
+      "offset": [
+       16,
+       16
+      ]
+     },
+     {
+      "label": "Verdict",
+      "sel": "#steps .step:nth-child(2) .s-big",
+      "width": "262px",
+      "height": "28px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "25.6px",
+      "fontWeight": "900",
+      "lineHeight": "28.16px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       10.43,
+       75.72,
+       18.34
+      ],
+      "offset": [
+       68,
+       16
+      ]
+     },
+     {
+      "label": "Detail",
+      "sel": "#steps .step:nth-child(2) .s-sub",
+      "width": "262px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "400",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       31.37,
+       75.72,
+       13.9
+      ],
+      "offset": [
+       68,
+       48
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "153px",
+     "padding": "14px",
+     "border": "2px solid rgb(140, 196, 255)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(15, 43, 77)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "#steps .step:nth-child(2)",
+      "width": "346px",
+      "height": "153px",
+      "padding": "14px",
+      "border": "2px solid rgb(140, 196, 255)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(15, 43, 77)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "12px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Mark",
+      "sel": "#steps .step:nth-child(2) .mark",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px",
+      "border": "0px none rgb(22, 30, 40)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(140, 196, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(22, 30, 40)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       4.62,
+       10.43,
+       11.56,
+       26.07
+      ],
+      "offset": [
+       16,
+       16
+      ]
+     },
+     {
+      "label": "Verdict",
+      "sel": "#steps .step:nth-child(2) .s-big",
+      "width": "262px",
+      "height": "28px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "25.6px",
+      "fontWeight": "900",
+      "lineHeight": "28.16px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       10.43,
+       75.72,
+       18.34
+      ],
+      "offset": [
+       68,
+       16
+      ]
+     },
+     {
+      "label": "Detail",
+      "sel": "#steps .step:nth-child(2) .s-sub",
+      "width": "262px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "400",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       31.37,
+       75.72,
+       13.9
+      ],
+      "offset": [
+       68,
+       48
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-09",
+   "name": "Verdict card: not allowed",
+   "file": "DS-CMP-09.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "207px",
+     "padding": "14px",
+     "border": "2px solid rgb(154, 74, 0)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(255, 255, 255)",
+     "backgroundImage": "repeating-linear-gradient(135deg, rgb(255, 227, 189) 0px, rgb(255, 227, 189) 10px, rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px), none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "#steps .step:nth-child(2)",
+      "width": "346px",
+      "height": "207px",
+      "padding": "14px",
+      "border": "2px solid rgb(154, 74, 0)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "repeating-linear-gradient(135deg, rgb(255, 227, 189) 0px, rgb(255, 227, 189) 10px, rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px), none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "12px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Mark",
+      "sel": "#steps .step:nth-child(2) .mark",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px",
+      "border": "0px none rgb(255, 255, 255)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(154, 74, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       4.62,
+       7.73,
+       11.56,
+       19.33
+      ],
+      "offset": [
+       16,
+       16
+      ]
+     },
+     {
+      "label": "Verdict",
+      "sel": "#steps .step:nth-child(2) .s-big",
+      "width": "262px",
+      "height": "56px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "25.6px",
+      "fontWeight": "900",
+      "lineHeight": "28.16px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       7.73,
+       75.72,
+       27.2
+      ],
+      "offset": [
+       68,
+       16
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "207px",
+     "padding": "14px",
+     "border": "2px solid rgb(255, 180, 77)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(22, 30, 40)",
+     "backgroundImage": "repeating-linear-gradient(135deg, rgb(63, 42, 11) 0px, rgb(63, 42, 11) 10px, rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px), none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "#steps .step:nth-child(2)",
+      "width": "346px",
+      "height": "207px",
+      "padding": "14px",
+      "border": "2px solid rgb(255, 180, 77)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "repeating-linear-gradient(135deg, rgb(63, 42, 11) 0px, rgb(63, 42, 11) 10px, rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px), none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "12px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Mark",
+      "sel": "#steps .step:nth-child(2) .mark",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px",
+      "border": "0px none rgb(22, 30, 40)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(255, 180, 77)",
+      "backgroundImage": "none",
+      "color": "rgb(22, 30, 40)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       4.62,
+       7.73,
+       11.56,
+       19.33
+      ],
+      "offset": [
+       16,
+       16
+      ]
+     },
+     {
+      "label": "Verdict",
+      "sel": "#steps .step:nth-child(2) .s-big",
+      "width": "262px",
+      "height": "56px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "25.6px",
+      "fontWeight": "900",
+      "lineHeight": "28.16px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       7.73,
+       75.72,
+       27.2
+      ],
+      "offset": [
+       68,
+       16
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-10",
+   "name": "Info card",
+   "file": "DS-CMP-10.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "125px",
+     "padding": "14px",
+     "border": "2px dashed rgb(185, 195, 207)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "#steps .step.info",
+      "width": "346px",
+      "height": "125px",
+      "padding": "14px",
+      "border": "2px dashed rgb(185, 195, 207)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "12px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Mark",
+      "sel": "#steps .step.info .mark",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px",
+      "border": "2px solid rgb(13, 21, 32)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       4.62,
+       12.84,
+       11.56,
+       32.09
+      ],
+      "offset": [
+       16,
+       16
+      ]
+     },
+     {
+      "label": "Title",
+      "sel": "#steps .step.info .s-title",
+      "width": "262px",
+      "height": "46px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "20px",
+      "fontWeight": "900",
+      "lineHeight": "23px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       12.84,
+       75.72,
+       36.9
+      ],
+      "offset": [
+       68,
+       16
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "125px",
+     "padding": "14px",
+     "border": "2px dashed rgb(58, 72, 88)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Card",
+      "sel": "#steps .step.info",
+      "width": "346px",
+      "height": "125px",
+      "padding": "14px",
+      "border": "2px dashed rgb(58, 72, 88)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "12px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Mark",
+      "sel": "#steps .step.info .mark",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px",
+      "border": "2px solid rgb(243, 246, 250)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "22.4px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       4.62,
+       12.84,
+       11.56,
+       32.09
+      ],
+      "offset": [
+       16,
+       16
+      ]
+     },
+     {
+      "label": "Title",
+      "sel": "#steps .step.info .s-title",
+      "width": "262px",
+      "height": "46px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "20px",
+      "fontWeight": "900",
+      "lineHeight": "23px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       19.65,
+       12.84,
+       75.72,
+       36.9
+      ],
+      "offset": [
+       68,
+       16
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-11",
+   "name": "Key–value list",
+   "file": "DS-CMP-11.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "129px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "14.72px",
+     "fontWeight": "400",
+     "lineHeight": "21.344px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "4px 14px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Key",
+      "sel": "#steps .kv dt",
+      "width": "106px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(63, 75, 90)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(63, 75, 90)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "700",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       30.73,
+       16.58
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Value",
+      "sel": "#steps .kv dd",
+      "width": "226px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "400",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       34.77,
+       0,
+       65.23,
+       16.58
+      ],
+      "offset": [
+       120,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "129px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "14.72px",
+     "fontWeight": "400",
+     "lineHeight": "21.344px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "4px 14px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Key",
+      "sel": "#steps .kv dt",
+      "width": "106px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(182, 194, 208)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(182, 194, 208)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "700",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       30.73,
+       16.58
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Value",
+      "sel": "#steps .kv dd",
+      "width": "226px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "400",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       34.77,
+       0,
+       65.23,
+       16.58
+      ],
+      "offset": [
+       120,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-12",
+   "name": "Cleaning badge: soon",
+   "file": "DS-CMP-12.png",
+   "light": {
+    "root": {
+     "width": "226px",
+     "height": "76px",
+     "padding": "3px 8px 3px 6px",
+     "border": "1px solid rgb(13, 21, 32)",
+     "borderRadius": "5px",
+     "backgroundColor": "rgb(176, 0, 26)",
+     "backgroundImage": "none",
+     "color": "rgb(255, 225, 77)",
+     "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+     "fontSize": "13.6px",
+     "fontWeight": "800",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "6px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Badge",
+      "sel": "#steps .kv .ban",
+      "width": "226px",
+      "height": "76px",
+      "padding": "3px 8px 3px 6px",
+      "border": "1px solid rgb(13, 21, 32)",
+      "borderRadius": "5px",
+      "backgroundColor": "rgb(176, 0, 26)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 225, 77)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "13.6px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "6px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "226px",
+     "height": "76px",
+     "padding": "3px 8px 3px 6px",
+     "border": "1px solid rgb(243, 246, 250)",
+     "borderRadius": "5px",
+     "backgroundColor": "rgb(176, 0, 26)",
+     "backgroundImage": "none",
+     "color": "rgb(255, 225, 77)",
+     "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+     "fontSize": "13.6px",
+     "fontWeight": "800",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "6px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Badge",
+      "sel": "#steps .kv .ban",
+      "width": "226px",
+      "height": "76px",
+      "padding": "3px 8px 3px 6px",
+      "border": "1px solid rgb(243, 246, 250)",
+      "borderRadius": "5px",
+      "backgroundColor": "rgb(176, 0, 26)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 225, 77)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "13.6px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "6px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-13",
+   "name": "Cleaning badge: later",
+   "file": "DS-CMP-13.png",
+   "light": {
+    "root": {
+     "width": "226px",
+     "height": "76px",
+     "padding": "3px 8px 3px 6px",
+     "border": "1px dashed rgb(13, 21, 32)",
+     "borderRadius": "5px",
+     "backgroundColor": "rgb(255, 255, 255)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+     "fontSize": "13.6px",
+     "fontWeight": "800",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "6px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Badge",
+      "sel": "#steps .kv .ban.cold",
+      "width": "226px",
+      "height": "76px",
+      "padding": "3px 8px 3px 6px",
+      "border": "1px dashed rgb(13, 21, 32)",
+      "borderRadius": "5px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "13.6px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "6px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "226px",
+     "height": "76px",
+     "padding": "3px 8px 3px 6px",
+     "border": "1px dashed rgb(243, 246, 250)",
+     "borderRadius": "5px",
+     "backgroundColor": "rgb(22, 30, 40)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+     "fontSize": "13.6px",
+     "fontWeight": "800",
+     "lineHeight": "normal",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "6px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Badge",
+      "sel": "#steps .kv .ban.cold",
+      "width": "226px",
+      "height": "76px",
+      "padding": "3px 8px 3px 6px",
+      "border": "1px dashed rgb(243, 246, 250)",
+      "borderRadius": "5px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "13.6px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "6px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-14",
+   "name": "Suggestion row with bar",
+   "file": "DS-CMP-14.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "105px",
+     "padding": "8px 10px",
+     "border": "2px solid rgb(185, 195, 207)",
+     "borderRadius": "8px",
+     "backgroundColor": "rgb(255, 255, 255)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Row",
+      "sel": "#sug .sg",
+      "width": "346px",
+      "height": "105px",
+      "padding": "8px 10px",
+      "border": "2px solid rgb(185, 195, 207)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Street",
+      "sel": "#sug .sg .sg-top",
+      "width": "322px",
+      "height": "23px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "800",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "10px",
+      "boxShadow": "none",
+      "box": [
+       3.47,
+       9.5,
+       93.06,
+       22.03
+      ],
+      "offset": [
+       12,
+       10
+      ]
+     },
+     {
+      "label": "Stay",
+      "sel": "#sug .sg .sg-dur",
+      "width": "94px",
+      "height": "19px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "15.2px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       69.49,
+       11.4,
+       27.04,
+       18.05
+      ],
+      "offset": [
+       240,
+       12
+      ]
+     },
+     {
+      "label": "Bar track",
+      "sel": "#sug .sg .sg-bar",
+      "width": "322px",
+      "height": "14px",
+      "padding": "0px",
+      "border": "1px solid rgb(185, 195, 207)",
+      "borderRadius": "3px",
+      "backgroundColor": "rgb(242, 244, 247)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       3.47,
+       37.23,
+       93.06,
+       13.3
+      ],
+      "offset": [
+       12,
+       39
+      ]
+     },
+     {
+      "label": "Bar fill",
+      "sel": "#sug .sg .sg-bar span",
+      "width": "320px",
+      "height": "12px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgb(11, 79, 153)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       3.76,
+       38.18,
+       92.49,
+       11.4
+      ],
+      "offset": [
+       13,
+       40
+      ]
+     },
+     {
+      "label": "Details",
+      "sel": "#sug .sg .sg-meta",
+      "width": "322px",
+      "height": "38px",
+      "padding": "0px",
+      "border": "0px none rgb(63, 75, 90)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(63, 75, 90)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.12px",
+      "fontWeight": "400",
+      "lineHeight": "19.024px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       3.47,
+       54.33,
+       93.06,
+       36.16
+      ],
+      "offset": [
+       12,
+       57
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "105px",
+     "padding": "8px 10px",
+     "border": "2px solid rgb(58, 72, 88)",
+     "borderRadius": "8px",
+     "backgroundColor": "rgb(22, 30, 40)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Row",
+      "sel": "#sug .sg",
+      "width": "346px",
+      "height": "105px",
+      "padding": "8px 10px",
+      "border": "2px solid rgb(58, 72, 88)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Street",
+      "sel": "#sug .sg .sg-top",
+      "width": "322px",
+      "height": "23px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "800",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "10px",
+      "boxShadow": "none",
+      "box": [
+       3.47,
+       9.5,
+       93.06,
+       22.03
+      ],
+      "offset": [
+       12,
+       10
+      ]
+     },
+     {
+      "label": "Stay",
+      "sel": "#sug .sg .sg-dur",
+      "width": "94px",
+      "height": "19px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "\"Overpass Mono\", ui-monospace, monospace",
+      "fontSize": "15.2px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       69.49,
+       11.4,
+       27.04,
+       18.05
+      ],
+      "offset": [
+       240,
+       12
+      ]
+     },
+     {
+      "label": "Bar track",
+      "sel": "#sug .sg .sg-bar",
+      "width": "322px",
+      "height": "14px",
+      "padding": "0px",
+      "border": "1px solid rgb(58, 72, 88)",
+      "borderRadius": "3px",
+      "backgroundColor": "rgb(12, 17, 23)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       3.47,
+       37.23,
+       93.06,
+       13.3
+      ],
+      "offset": [
+       12,
+       39
+      ]
+     },
+     {
+      "label": "Bar fill",
+      "sel": "#sug .sg .sg-bar span",
+      "width": "320px",
+      "height": "12px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgb(140, 196, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       3.76,
+       38.18,
+       92.49,
+       11.4
+      ],
+      "offset": [
+       13,
+       40
+      ]
+     },
+     {
+      "label": "Details",
+      "sel": "#sug .sg .sg-meta",
+      "width": "322px",
+      "height": "38px",
+      "padding": "0px",
+      "border": "0px none rgb(182, 194, 208)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(182, 194, 208)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.12px",
+      "fontWeight": "400",
+      "lineHeight": "19.024px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       3.47,
+       54.33,
+       93.06,
+       36.16
+      ],
+      "offset": [
+       12,
+       57
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-15",
+   "name": "Legend",
+   "file": "DS-CMP-15.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "211px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "13.12px",
+     "fontWeight": "400",
+     "lineHeight": "19.024px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "8px 16px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Item",
+      "sel": ".legend > span",
+      "width": "225px",
+      "height": "19px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.12px",
+      "fontWeight": "400",
+      "lineHeight": "19.024px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "6px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       65.05,
+       9.01
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "211px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "13.12px",
+     "fontWeight": "400",
+     "lineHeight": "19.024px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "8px 16px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Item",
+      "sel": ".legend > span",
+      "width": "225px",
+      "height": "19px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.12px",
+      "fontWeight": "400",
+      "lineHeight": "19.024px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "6px",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       65.05,
+       9.01
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-16",
+   "name": "Hint and note text",
+   "file": "DS-CMP-16.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "20px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "14.08px",
+     "fontWeight": "700",
+     "lineHeight": "20.416px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Note",
+      "sel": "#fuzzy",
+      "width": "346px",
+      "height": "20px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.08px",
+      "fontWeight": "700",
+      "lineHeight": "20.416px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "20px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "14.08px",
+     "fontWeight": "700",
+     "lineHeight": "20.416px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Note",
+      "sel": "#fuzzy",
+      "width": "346px",
+      "height": "20px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.08px",
+      "fontWeight": "700",
+      "lineHeight": "20.416px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-17",
+   "name": "My car header",
+   "file": "DS-CMP-17.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "93px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Address",
+      "sel": ".carhead .s-title",
+      "width": "221px",
+      "height": "23px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "20px",
+      "fontWeight": "900",
+      "lineHeight": "23px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       63.84,
+       24.64
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Parked line",
+      "sel": ".carhead .s-sub",
+      "width": "221px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(13, 21, 32)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "400",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       28.93,
+       63.84,
+       22.85
+      ],
+      "offset": [
+       0,
+       27
+      ]
+     },
+     {
+      "label": "Button",
+      "sel": "#moved",
+      "width": "128px",
+      "height": "33px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(185, 195, 207)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       64.64,
+       36.85,
+       35.36
+      ],
+      "offset": [
+       0,
+       60
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "93px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "12px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Address",
+      "sel": ".carhead .s-title",
+      "width": "221px",
+      "height": "23px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "20px",
+      "fontWeight": "900",
+      "lineHeight": "23px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       63.84,
+       24.64
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Parked line",
+      "sel": ".carhead .s-sub",
+      "width": "221px",
+      "height": "21px",
+      "padding": "0px",
+      "border": "0px none rgb(243, 246, 250)",
+      "borderRadius": "0px",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "14.72px",
+      "fontWeight": "400",
+      "lineHeight": "21.344px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       28.93,
+       63.84,
+       22.85
+      ],
+      "offset": [
+       0,
+       27
+      ]
+     },
+     {
+      "label": "Button",
+      "sel": "#moved",
+      "width": "128px",
+      "height": "33px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(58, 72, 88)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       64.64,
+       36.85,
+       35.36
+      ],
+      "offset": [
+       0,
+       60
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-18",
+   "name": "Pay buttons",
+   "file": "DS-CMP-18.png",
+   "light": {
+    "root": {
+     "width": "262px",
+     "height": "130px",
+     "padding": "0px",
+     "border": "0px none rgb(13, 21, 32)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "10px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Pay button",
+      "sel": "#car .paybtn",
+      "width": "225px",
+      "height": "44px",
+      "padding": "12px 16px",
+      "border": "0px none rgb(255, 255, 255)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(11, 92, 173)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       85.83,
+       33.85
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Link button",
+      "sel": "#car .lnk",
+      "width": "209px",
+      "height": "33px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(185, 195, 207)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       41.54,
+       79.92,
+       25.38
+      ],
+      "offset": [
+       0,
+       54
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "262px",
+     "height": "130px",
+     "padding": "0px",
+     "border": "0px none rgb(243, 246, 250)",
+     "borderRadius": "0px",
+     "backgroundColor": "rgba(0, 0, 0, 0)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "10px",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Pay button",
+      "sel": "#car .paybtn",
+      "width": "225px",
+      "height": "44px",
+      "padding": "12px 16px",
+      "border": "0px none rgb(255, 255, 255)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(59, 139, 224)",
+      "backgroundImage": "none",
+      "color": "rgb(255, 255, 255)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "900",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       85.83,
+       33.85
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Link button",
+      "sel": "#car .lnk",
+      "width": "209px",
+      "height": "33px",
+      "padding": "6px 12px",
+      "border": "2px solid rgb(58, 72, 88)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "13.6px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       41.54,
+       79.92,
+       25.38
+      ],
+      "offset": [
+       0,
+       54
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  },
+  {
+   "id": "DS-CMP-19",
+   "name": "Map with labels",
+   "file": "DS-CMP-19.png",
+   "light": {
+    "root": {
+     "width": "346px",
+     "height": "363px",
+     "padding": "0px",
+     "border": "1px solid rgb(185, 195, 207)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(255, 255, 255)",
+     "backgroundImage": "none",
+     "color": "rgb(13, 21, 32)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Map frame",
+      "sel": "#mapbox",
+      "width": "346px",
+      "height": "363px",
+      "padding": "0px",
+      "border": "1px solid rgb(185, 195, 207)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Zoom button",
+      "sel": "#zin",
+      "width": "40px",
+      "height": "40px",
+      "padding": "1px 6px",
+      "border": "2px solid rgb(13, 21, 32)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "backgroundImage": "none",
+      "color": "rgb(13, 21, 32)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "20.8px",
+      "fontWeight": "900",
+      "lineHeight": "20.8px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       85.26,
+       3.03,
+       11.56,
+       11.02
+      ],
+      "offset": [
+       295,
+       11
+      ]
+     }
+    ],
+    "pad": 6
+   },
+   "dark": {
+    "root": {
+     "width": "346px",
+     "height": "363px",
+     "padding": "0px",
+     "border": "1px solid rgb(58, 72, 88)",
+     "borderRadius": "10px",
+     "backgroundColor": "rgb(22, 30, 40)",
+     "backgroundImage": "none",
+     "color": "rgb(243, 246, 250)",
+     "fontFamily": "Overpass, system-ui, sans-serif",
+     "fontSize": "16px",
+     "fontWeight": "400",
+     "lineHeight": "23.2px",
+     "letterSpacing": "normal",
+     "textTransform": "none",
+     "gap": "normal",
+     "boxShadow": "none",
+     "box": [
+      0,
+      0,
+      100,
+      100
+     ],
+     "offset": [
+      0,
+      0
+     ]
+    },
+    "parts": [
+     {
+      "label": "Map frame",
+      "sel": "#mapbox",
+      "width": "346px",
+      "height": "363px",
+      "padding": "0px",
+      "border": "1px solid rgb(58, 72, 88)",
+      "borderRadius": "10px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "23.2px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       0,
+       0,
+       100,
+       100
+      ],
+      "offset": [
+       0,
+       0
+      ]
+     },
+     {
+      "label": "Zoom button",
+      "sel": "#zin",
+      "width": "40px",
+      "height": "40px",
+      "padding": "1px 6px",
+      "border": "2px solid rgb(243, 246, 250)",
+      "borderRadius": "8px",
+      "backgroundColor": "rgb(22, 30, 40)",
+      "backgroundImage": "none",
+      "color": "rgb(243, 246, 250)",
+      "fontFamily": "Overpass, system-ui, sans-serif",
+      "fontSize": "20.8px",
+      "fontWeight": "900",
+      "lineHeight": "20.8px",
+      "letterSpacing": "normal",
+      "textTransform": "none",
+      "gap": "normal",
+      "boxShadow": "none",
+      "box": [
+       85.26,
+       3.03,
+       11.56,
+       11.02
+      ],
+      "offset": [
+       295,
+       11
+      ]
+     }
+    ],
+    "pad": 6
+   }
+  }
+ ],
+ "tokens": {
+  "light": {
+   "--bg": "#f2f4f7",
+   "--surface": "#ffffff",
+   "--ink": "#0d1520",
+   "--muted": "#3f4b5a",
+   "--line": "#b9c3cf",
+   "--sign": "#0b5cad",
+   "--ok": "#0b4f99",
+   "--ok-soft": "#dceafa",
+   "--no": "#9a4a00",
+   "--no-soft": "#ffe3bd",
+   "--stop": "#c8102e",
+   "--ban-bg": "#b0001a",
+   "--ban-fg": "#ffe14d",
+   "--road": "#c3cad3",
+   "--road-major": "#a7b0bb",
+   "--halo": "#ffffff",
+   "--pin": "#0d1520",
+   "--other": "#5d6876",
+   "--f-display": "\"Overpass\",system-ui,sans-serif",
+   "--f-mono": "\"Overpass Mono\",ui-monospace,monospace"
+  },
+  "dark": {
+   "--bg": "#0c1117",
+   "--surface": "#161e28",
+   "--ink": "#f3f6fa",
+   "--muted": "#b6c2d0",
+   "--line": "#3a4858",
+   "--sign": "#3b8be0",
+   "--ok": "#8cc4ff",
+   "--ok-soft": "#0f2b4d",
+   "--no": "#ffb44d",
+   "--no-soft": "#3f2a0b",
+   "--stop": "#ff5c5c",
+   "--ban-bg": "#b0001a",
+   "--ban-fg": "#ffe14d",
+   "--road": "#344252",
+   "--road-major": "#4a5a6c",
+   "--halo": "#161e28",
+   "--pin": "#f3f6fa",
+   "--other": "#9aa7b6",
+   "--f-display": "\"Overpass\",system-ui,sans-serif",
+   "--f-mono": "\"Overpass Mono\",ui-monospace,monospace"
+  }
+ },
+ "states": [
+  {
+   "id": "DS-CMP-06",
+   "name": null,
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-06-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-06-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-06-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(11, 92, 173) solid 3px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-06-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-06-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-07",
+   "name": null,
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-07-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-07-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-07-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(11, 92, 173) solid 3px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-07-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-07-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-05",
+   "name": null,
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-05-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "text",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-05-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "text",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-05-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(11, 92, 173)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "text",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-05-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(11, 92, 173)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "text",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-05-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "default",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-20",
+   "name": "Date and time field",
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-20-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "default",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-20-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "default",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-20-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(11, 92, 173)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "default",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-20-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(11, 92, 173)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "default",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-20-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(242, 244, 247)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "default",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-14",
+   "name": null,
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-14-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-14-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-14-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(11, 92, 173) solid 3px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-14-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-14-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-18",
+   "name": null,
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-18-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-18-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-18-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(11, 92, 173) solid 3px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-18-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-18-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(11, 92, 173)",
+      "color": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "outline": "rgb(255, 255, 255) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": "Not possible on a link"
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-21",
+   "name": "Map zoom button",
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-21-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-21-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-21-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(11, 92, 173) solid 3px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-21-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-21-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(13, 21, 32)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  },
+  {
+   "id": "DS-CMP-22",
+   "name": "Location button",
+   "states": [
+    {
+     "state": "default",
+     "file": "DS-CMP-22-state-default.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "hover",
+     "file": "DS-CMP-22-state-hover.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "focus",
+     "file": "DS-CMP-22-state-focus.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(11, 92, 173) solid 3px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "pressed",
+     "file": "DS-CMP-22-state-pressed.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    },
+    {
+     "state": "disabled",
+     "file": "DS-CMP-22-state-disabled.png",
+     "css": {
+      "backgroundColor": "rgb(255, 255, 255)",
+      "color": "rgb(13, 21, 32)",
+      "borderColor": "rgb(185, 195, 207)",
+      "borderWidth": "2px",
+      "outline": "rgb(13, 21, 32) none 0px",
+      "outlineOffset": "0px",
+      "boxShadow": "none",
+      "opacity": "1",
+      "cursor": "pointer",
+      "transform": "none"
+     },
+     "note": ""
+    }
+   ]
+  }
+ ]
+}

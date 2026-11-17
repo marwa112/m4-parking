@@ -1,0 +1,24 @@
+%% AR-05 Sequence: check an address
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant F as Search form
+  participant S as Street search
+  participant L as Address location
+  participant R as Rules engine
+  participant V as Result, suggestions, map
+  U->>F: Street + number (+ start time, until time)
+  F->>S: resolveStreet(name)
+  S-->>F: M-zone street, or "not valid here"
+  F->>L: locate(street, number)
+  L-->>F: position, estimated or exact
+  F->>L: side of street, M sections ≤ 45 m
+  L-->>R: chosen M section (own side first)
+  R->>R: status(start time), nextChange()
+  alt until time set
+    R->>R: check every 15 min to until time
+  end
+  R-->>V: verdict, end or start time, reason
+  V-->>U: Permit valid? Park now? Until when? Why?
+  V->>R: stays for M sections ≤ 500 m
+  V-->>U: Longest stays nearby, map with labels

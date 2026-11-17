@@ -1,0 +1,27 @@
+%% IA-02 Content objects and how they relate
+classDiagram
+  direction LR
+  class Permit{zone letter M · taxa 4}
+  class Street{name}
+  class Address{street · house number · position · side}
+  class MSection{sign M4/M4n/M5/M5n · spaces · position}
+  class CleaningRule{weekday · hours · week type · season}
+  class NightRule{18–09 weekdays · 15:00 before holidays}
+  class PaidParking{taxa · price · max time · platskod}
+  class Moment{start time · until time · now or selected}
+  class Verdict{allowed · end or start time · reason}
+  class Suggestion{M section · stay · distance}
+  class ParkedCar{address · M section · parked at}
+  class Week{ISO number · odd or even}
+  Street "1" --> "*" Address
+  Street "1" --> "*" MSection
+  MSection "1" --> "*" CleaningRule
+  MSection "1" --> "0..1" NightRule
+  MSection "1" --> "0..1" PaidParking
+  Permit --> MSection : valid on
+  Address --> MSection : nearest on own side
+  MSection --> Verdict : at Moment
+  Moment --> Week
+  Suggestion --> MSection
+  ParkedCar --> MSection
+  ParkedCar --> Verdict : pay or move

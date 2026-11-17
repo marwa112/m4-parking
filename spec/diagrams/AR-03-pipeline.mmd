@@ -1,0 +1,15 @@
+%% AR-03 Data pipeline (scripts/refresh.sh)
+flowchart LR
+  W1[("WFS parkering:boende")] --> F1["fetch_city.py"]
+  W2[("WFS parkering:sopzoner")] --> F1
+  F1 --> B1["build_segments.py<br/>keep zone M · EPSG:3007 → WGS 84<br/>attach cleaning rules ≤ 4 m"]
+  O1[("OpenStreetMap API")] -->|"first Monday<br/>of the month"| F2["fetch_osm.py<br/>addresses + streets"]
+  F2 --> C1[("data/osm cache")]
+  C1 --> P1
+  W3[("WFS taxa, time-limited,<br/>loading, MC, disabled, private")] --> F3["fetch_other.py<br/>price, max time"]
+  B1 --> P1["pack.py<br/>attach paid parking ≤ 4 m<br/>platskod per taxa<br/>compact arrays"]
+  F3 --> P1
+  P1 --> CHK{"≥ 300 sections<br/>≥ 1000 addresses<br/>≥ 1000 streets?"}
+  CHK -- "yes" --> OUT[("docs/data.json")]
+  CHK -- "no" --> STOP["stop, publish nothing"]
+  OUT --> COMMIT["commit if changed"]

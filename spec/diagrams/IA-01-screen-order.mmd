@@ -1,0 +1,9 @@
+%% IA-01 Screen structure: one scrolling screen, fixed order of regions
+flowchart TB
+  H["R1 Header<br/>app name · permit"] --> WK["R2 Week banner<br/>week number · odd/even"]
+  WK --> CAR["R3 My car<br/>(only when a car is saved)"]
+  CAR --> Q["R4 Question<br/>street · number · location ·<br/>start time · until time"]
+  Q --> A["R5 Answer<br/>permit → park now? → until when → why → details"]
+  A --> ALT["R6 Alternatives<br/>longest stays nearby"]
+  ALT --> CTX["R7 Context<br/>map · legend"]
+  CTX --> F["R8 Footer<br/>rules summary · data date · disclaimer"]

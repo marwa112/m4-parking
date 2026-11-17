@@ -1,0 +1,19 @@
+%% AR-07 Rules engine: is parking allowed in M section s at time t?
+flowchart TB
+  START(["status(t, s)"]) --> TAXA{"Sign taxa ≥ 4?"}
+  TAXA -- "no" --> NS["Not allowed<br/>reason: sign"]
+  TAXA -- "yes" --> CL{"Any cleaning rule active?<br/>season · weekday ·<br/>odd/even ISO week · hours"}
+  CL -- "yes" --> NC["Not allowed<br/>reason: street cleaning"]
+  CL -- "no" --> NIGHT{"Night sign (n)?"}
+  NIGHT -- "no" --> OK["Allowed"]
+  NIGHT -- "yes" --> HOL{"Sunday or<br/>public holiday?"}
+  HOL -- "yes" --> OK
+  HOL -- "no" --> EARLY{"Before 09:00?"}
+  EARLY -- "yes" --> OK
+  EARLY -- "no" --> EVE{"Next day Sunday<br/>or holiday?"}
+  EVE -- "yes" --> F15{"After 15:00?"}
+  EVE -- "no" --> F18{"After 18:00?"}
+  F15 -- "yes" --> OK
+  F18 -- "yes" --> OK
+  F15 -- "no" --> ND["Not allowed<br/>reason: daytime on night sign"]
+  F18 -- "no" --> ND

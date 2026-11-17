@@ -1,0 +1,20 @@
+%% AR-01 System context: who and what M4 Parking Check talks to
+flowchart LR
+  U(["Permit holder<br/>(user)"])
+  subgraph PHONE["User's phone"]
+    APP["M4 Parking Check<br/>web app or Android app"]
+    PG["Parkering Göteborg app"]
+    SMS["SMS app"]
+  end
+  CITY[("Göteborgs Stad<br/>open WFS data")]
+  OSM[("OpenStreetMap<br/>addresses and streets")]
+  GH["GitHub<br/>repository, Actions,<br/>Pages, Releases"]
+  PGB["Parkering Göteborg<br/>SMS 72 430"]
+  U -- "address, start time,<br/>until time, I parked here" --> APP
+  APP -- "result, map, reminders" --> U
+  APP -- "opens" --> PG
+  APP -- "prepares SMS" --> SMS
+  SMS -- "platskod / avsluta" --> PGB
+  CITY -- "weekly download" --> GH
+  OSM -- "monthly download" --> GH
+  GH -- "data.json, web app, APK" --> APP

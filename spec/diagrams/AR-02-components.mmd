@@ -1,0 +1,21 @@
+%% AR-02 Components of the app, as layers. Detailed flows: AR-05 and AR-06.
+flowchart TB
+  subgraph UI["Layer 1 · User interface (docs/index.html)"]
+    direction LR
+    WK["Week banner"] ~~~ CAR["My car card"] ~~~ FORM["Search form"] ~~~ RES["Result cards"] ~~~ SUG["Longest stays"] ~~~ MAP["Map + legend"]
+  end
+  subgraph CORE["Layer 2 · App logic (JavaScript in the page)"]
+    direction LR
+    SEARCH["Street search<br/>fuzzy match"] ~~~ LOC["Address location<br/>side of street"] ~~~ RULES["Rules engine<br/>status · nextChange"] ~~~ CAL["Calendar<br/>ISO week · holidays"] ~~~ PLAN["Pay-or-move<br/>plan"] ~~~ LABEL["Map label<br/>placer"]
+  end
+  subgraph DATA["Layer 3 · Data and storage on the device"]
+    direction LR
+    DJ[("data.json")] ~~~ LS[("localStorage<br/>address · car · data copy")] ~~~ SW[("Service worker cache<br/>web app only")]
+  end
+  subgraph NAT["Layer 4 · Android shell (Capacitor 6, APK only)"]
+    direction LR
+    LN["Local notifications"] ~~~ AL["App launcher<br/>Parkering Göteborg · SMS"] ~~~ AS["App state<br/>resume → reschedule"]
+  end
+  UI -- "user input, render" --> CORE
+  CORE -- "read, save" --> DATA
+  CORE -- "schedule, launch" --> NAT

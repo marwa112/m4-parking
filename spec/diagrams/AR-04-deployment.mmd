@@ -1,0 +1,22 @@
+%% AR-04 Deployment
+flowchart LR
+  subgraph REPO["GitHub repository marwa112/m4-parking"]
+    SRC["docs/ web app + data<br/>app/ Android wrapper<br/>scripts/ pipeline<br/>spec/ this document"]
+  end
+  subgraph ACT["GitHub Actions"]
+    RD["Refresh parking data<br/>Mondays 02:17 UTC"]
+    BA["Build Android app<br/>on app changes"]
+    PB["pages-build-deployment"]
+  end
+  PAGES["GitHub Pages<br/>marwa112.github.io/m4-parking<br/>/ app · /deck · /spec"]
+  REL["GitHub Releases<br/>m4-parking.apk v1.n"]
+  subgraph PHONE["Android phone"]
+    CH["Chrome<br/>web app on home screen"]
+    APK["Installed APK<br/>(Capacitor WebView)"]
+  end
+  RD -- "commit data.json" --> SRC
+  SRC --> PB --> PAGES
+  SRC --> BA --> REL
+  PAGES --> CH
+  REL -- "download, install" --> APK
+  PAGES -- "newer data.json" --> APK

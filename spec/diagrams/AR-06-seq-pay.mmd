@@ -1,0 +1,27 @@
+%% AR-06 Sequence: park, then pay or move
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant A as M4 Parking Check
+  participant N as Android notifications
+  participant P as Parkering Göteborg app
+  participant M as SMS app
+  U->>A: I parked here
+  A->>A: save car (section, address, time)
+  A->>A: plan(): free until, then pay or move
+  A->>N: schedule reminders (−15 min, end, stop paying)
+  N-->>U: "Free parking ends 09:00 · Pay or move"
+  alt paid parking in the section
+    U->>N: Open Parkering Göteborg
+    N->>P: launch app
+    U->>P: start and approve payment
+  else SMS fallback
+    U->>N: Pay by SMS
+    N->>M: compose "801" to 72430
+    U->>M: check sign, tap Send
+  else street cleaning or 14-day limit
+    A-->>U: Move the car
+  end
+  N-->>U: "Stop paying · permit covers the spot again"
+  U->>A: I moved the car
+  A->>N: cancel reminders
